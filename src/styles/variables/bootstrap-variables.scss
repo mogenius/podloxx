@@ -6,15 +6,15 @@ $enable-negative-margins: true;
 /* Additional colors from zeplin file: */
 
 //i PRIMARY FRONT COLORS
-$ks-lightred: #c44a55;
-$ks-darkred: #6e2930;
-$ks-darkblue: #003948;
-$ks-mango: #ff9636;
-$ks-brightpurple: #b620e0;
-$ks-gray: #3c4245;
-$ks-green: #00723c;
-$ks-red: #d61616;
-$ks-blue: #e5f5f9;
+$lox-lightred: #c44a55;
+$lox-darkred: #6e2930;
+$lox-darkblue: #003948;
+$lox-mango: #ff9636;
+$lox-brightpurple: #b620e0;
+$lox-gray: #3c4245;
+$lox-green: #00723c;
+$lox-red: #d61616;
+$lox-blue: #e5f5f9;
 $grey-7: #f9f9f9;
 $grey-6: #eaeaea;
 $grey-5: #e8e8e8;
@@ -26,15 +26,15 @@ $black: #000000;
 $white: #ffffff;
 
 //i PRIMARY FRONT COLORS
-$ks-bg-lightred: #c44a55;
-$ks-bg-darkred: #6e2930;
-$ks-bg-darkblue: #003948;
-$ks-bg-mango: #ff9636;
-$ks-bg-brightpurple: #b620e0;
-$ks-bg-gray: #3c4245;
-$ks-bg-green: #00723c;
-$ks-bg-red: #d61616;
-$ks-bg-blue: #e5f5f9;
+$lox-bg-lightred: #c44a55;
+$lox-bg-darkred: #6e2930;
+$lox-bg-darkblue: #003948;
+$lox-bg-mango: #ff9636;
+$lox-bg-brightpurple: #b620e0;
+$lox-bg-gray: #3c4245;
+$lox-bg-green: #00723c;
+$lox-bg-red: #d61616;
+$lox-bg-blue: #e5f5f9;
 $bg-grey-7: #f9f9f9;
 $bg-grey-6: #eaeaea;
 $bg-grey-5: #e8e8e8;
@@ -48,15 +48,15 @@ $bg-white: #ffffff;
 /* add them into the already existing bootstrap array:; */
 $colors: (
   // FRONT COLORS
-  'ks-lightred': $ks-lightred,
-  'ks-darkred': $ks-darkred,
-  'ks-darkblue': $ks-darkblue,
-  'ks-mango': $ks-mango,
-  'ks-brightpurple': $ks-brightpurple,
-  'ks-gray': $ks-gray,
-  'ks-green': $ks-green,
-  'ks-red': $ks-red,
-  'ks-blue': $ks-blue,
+  'ks-lightred': $lox-lightred,
+  'ks-darkred': $lox-darkred,
+  'ks-darkblue': $lox-darkblue,
+  'ks-mango': $lox-mango,
+  'ks-brightpurple': $lox-brightpurple,
+  'ks-gray': $lox-gray,
+  'ks-green': $lox-green,
+  'ks-red': $lox-red,
+  'ks-blue': $lox-blue,
   'grey-7': $grey-7,
   'grey-6': $grey-6,
   'grey-5': $grey-5,
@@ -67,15 +67,15 @@ $colors: (
   'black': $black,
   'white': $white,
   // BACKGROUND-COLORS
-  'ks-bg-lightred': $ks-bg-lightred,
-  'ks-bg-darkred': $ks-bg-darkred,
-  'ks-bg-darkblue': $ks-bg-darkblue,
-  'ks-bg-mango': $ks-bg-mango,
-  'ks-bg-brightpurple': $ks-bg-brightpurple,
-  'ks-bg-gray': $ks-bg-gray,
-  'ks-bg-green': $ks-bg-green,
-  'ks-bg-red': $ks-bg-red,
-  'ks-bg-blue': $ks-bg-blue,
+  'ks-bg-lightred': $lox-bg-lightred,
+  'ks-bg-darkred': $lox-bg-darkred,
+  'ks-bg-darkblue': $lox-bg-darkblue,
+  'ks-bg-mango': $lox-bg-mango,
+  'ks-bg-brightpurple': $lox-bg-brightpurple,
+  'ks-bg-gray': $lox-bg-gray,
+  'ks-bg-green': $lox-bg-green,
+  'ks-bg-red': $lox-bg-red,
+  'ks-bg-blue': $lox-bg-blue,
   'bg-grey-7': $bg-grey-7,
   'bg-grey-6': $bg-grey-6,
   'bg-grey-5': $bg-grey-5,
@@ -89,15 +89,15 @@ $colors: (
 
 /* Adjustments to standard Bootstrap colors: */
 /* if more need to be adjusted, refer to _variables.scss */
-$primary: $ks-brightpurple; /* was: $blue */
-$success: $ks-green; /* was: $green */
-$warning: $ks-mango; /* was: $yellow */
-$danger: $ks-red; /* was: $red */
-$secondary: $ks-darkblue; /* was: $red */
-$danger: $ks-red; /* was: $red */
-$light: $ks-lightred; /* was: $red */
-$dark: $ks-darkred; /* was: $red */
-$info: $ks-blue;
+$primary: $lox-brightpurple; /* was: $blue */
+$success: $lox-green; /* was: $green */
+$warning: $lox-mango; /* was: $yellow */
+$danger: $lox-red; /* was: $red */
+$secondary: $lox-darkblue; /* was: $red */
+$danger: $lox-red; /* was: $red */
+$light: $lox-lightred; /* was: $red */
+$dark: $lox-darkred; /* was: $red */
+$info: $lox-blue;
 
 $theme-colors: (
   'primary': $primary,
@@ -131,11 +131,11 @@ $container-max-widths: (
 /* forms */
 $form-validation-states: (
   'valid': (
-    'color': $ks-green,
+    'color': $lox-green,
     'icon': none
   ),
   'invalid': (
-    'color': $ks-red,
+    'color': $lox-red,
     'icon': none
   )
 );
@@ -143,15 +143,15 @@ $form-validation-states: (
 // Color definition
 :root {
   // FRONT COLORS
-  --ks-lightred: #{$ks-lightred};
-  --ks-darkred: #{$ks-darkred};
-  --ks-darkblue: #{$ks-darkblue};
-  --ks-mango: #{$ks-mango};
-  --ks-brightpurple: #{$ks-brightpurple};
-  --ks-gray: #{$ks-gray};
-  --ks-green: #{$ks-green};
-  --ks-red: #{$ks-red};
-  --ks-blue: #{$ks-blue};
+  --lox-lightred: #{$lox-lightred};
+  --lox-darkred: #{$lox-darkred};
+  --lox-darkblue: #{$lox-darkblue};
+  --lox-mango: #{$lox-mango};
+  --lox-brightpurple: #{$lox-brightpurple};
+  --lox-gray: #{$lox-gray};
+  --lox-green: #{$lox-green};
+  --lox-red: #{$lox-red};
+  --lox-blue: #{$lox-blue};
   --grey-7: #{$grey-7};
   --grey-6: #{$grey-6};
   --grey-5: #{$grey-5};
@@ -162,15 +162,15 @@ $form-validation-states: (
   --black: #{$black};
   --white: #{$white};
   // BACKGROUND-COLORS
-  --ks-bg-lightred: #{$ks-bg-lightred};
-  --ks-bg-darkred: #{$ks-bg-darkred};
-  --ks-bg-darkblue: #{$ks-bg-darkblue};
-  --ks-bg-mango: #{$ks-bg-mango};
-  --ks-bg-brightpurple: #{$ks-bg-brightpurple};
-  --ks-bg-gray: #{$ks-bg-gray};
-  --ks-bg-green: #{$ks-bg-green};
-  --ks-bg-red: #{$ks-bg-red};
-  --ks-bg-blue: #{$ks-bg-blue};
+  --lox-bg-lightred: #{$lox-bg-lightred};
+  --lox-bg-darkred: #{$lox-bg-darkred};
+  --lox-bg-darkblue: #{$lox-bg-darkblue};
+  --lox-bg-mango: #{$lox-bg-mango};
+  --lox-bg-brightpurple: #{$lox-bg-brightpurple};
+  --lox-bg-gray: #{$lox-bg-gray};
+  --lox-bg-green: #{$lox-bg-green};
+  --lox-bg-red: #{$lox-bg-red};
+  --lox-bg-blue: #{$lox-bg-blue};
   --bg-grey-7: #{$bg-grey-7};
   --bg-grey-6: #{$bg-grey-6};
   --bg-grey-5: #{$bg-grey-5};

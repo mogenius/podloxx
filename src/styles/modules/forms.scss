@@ -71,7 +71,7 @@
   overflow: hidden;
   display: inline-flex;
   justify-content: space-between;
-  border: 2px solid var(--ks-brightpurple);
+  border: 2px solid var(--lox-brightpurple);
   &,
   input,
   input:after {
@@ -85,7 +85,7 @@
     font-weight: 400;
     font-size: 12px;
     cursor: pointer;
-    color: var(--ks-brightpurple);
+    color: var(--lox-brightpurple);
     padding: 1.5px 16px;
     margin: 0;
     width: 100%;
@@ -108,7 +108,7 @@
       top: 0;
       width: 100%;
       height: 100%;
-      background: var(--ks-brightpurple);
+      background: var(--lox-brightpurple);
       transition: left 0.4s;
     }
     &:first-child:after {
