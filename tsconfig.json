@@ -1,0 +1,35 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "strictPropertyInitialization": false,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "es2017",
+    "module": "es2020",
+    "lib": ["es2018", "dom", "dom.iterable"],
+    "paths": {
+      "@lox/assets/*": ["src/assets/*"],
+      "@lox/environments/*": ["src/environments/*"],
+      "@lox/*": ["src/app/modules/*", "src/app/*"]
+    }
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictPropertyInitialization": false,
+    "strictTemplates": false
+  }
+}

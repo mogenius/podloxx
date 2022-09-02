@@ -1,0 +1,29 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="h5">DASHBOARD</h1>
+</div>
+
+<div class="d-grid fr-3 gap-3 mb-5">
+  <div class="shadow d-flex flex-column p-3 rounded">
+    <span class="font-weight-semibold">Total selected pods</span>
+    <span class="font-size-xlarge">{{ totalPods }}</span>
+  </div>
+  <div class="shadow d-flex flex-column p-3 rounded">
+    <span class="font-weight-semibold">Total Transmitted</span>
+    <span class="font-size-xlarge">{{ totalTransmitted | formatBytes }}</span>
+  </div>
+  <div class="shadow d-flex flex-column p-3 rounded">
+    <span class="font-weight-semibold">Total Received</span>
+    <span class="font-size-xlarge">{{ totalReceived | formatBytes }}</span>
+  </div>
+</div>
+
+<div class="mb-6">
+  <h2 class="h6 mb-4">RECEIVED BYTES</h2>
+  <lox-received-bytes-graph></lox-received-bytes-graph>
+</div>
+<div class="mb-4">
+  <h2 class="h6 mb-4">TRANSMITTED BYTES</h2>
+  <lox-transmit-bytes-graph></lox-transmit-bytes-graph>
+</div>
+
+<div class="mt-4"><lox-table-list></lox-table-list></div>

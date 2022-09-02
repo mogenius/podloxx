@@ -1,0 +1,32 @@
+/* You can add global styles to this file, and also import other style files */
+// -------------------------------
+//* ---------- IMPORTS -----------
+// -------------------------------
+
+//i ---------- BOOTSTRAP ----------
+
+@import './styles/variables/bootstrap-variables.scss';
+
+/* BOOTSTRAP IMPLEMENTATION */
+//@import '~bootstrap/scss/bootstrap-grid.scss';
+@import '../node_modules/bootstrap/scss/bootstrap';
+@import './styles/modules/ng-select.scss';
+
+//@import "./styles/custom.scss"; // custom mogenius changes are connected here
+
+@import './styles/fonts/fonts.scss';
+@import './styles/modules/buttons.scss';
+@import './styles/modules/forms.scss';
+@import './styles/modules/colors.scss';
+@import './styles/modules/dropdowns.scss';
+@import './styles/modules/general.scss';
+
+// Fortawesome
+@import '~@fortawesome/fontawesome-free/scss/fontawesome';
+@import '~@fortawesome/fontawesome-free/scss/solid';
+@import '~@fortawesome/fontawesome-free/scss/brands';
+@import '~@fortawesome/fontawesome-free/scss/regular';
+@import '~@fortawesome/fontawesome-free/scss/v4-shims';
+
+/* Importing Bootstrap SCSS file. */
+@import '~bootstrap/scss/bootstrap';

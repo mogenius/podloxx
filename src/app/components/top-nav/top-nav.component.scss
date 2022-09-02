@@ -1,0 +1,104 @@
+.nav-bar {
+  height: 70px;
+  border-bottom: 1px solid var(--grey-6);
+  background-color: var(--bg-grey-7);
+  position: fixed;
+  width: 100%;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  img {
+    height: 60%;
+  }
+  a {
+    text-decoration: none;
+  }
+
+  button {
+    .spin {
+      animation: spin 1s infinite;
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    }
+  }
+}
+
+.sidebar {
+  width: 240px;
+  position: fixed;
+  overflow-y: auto;
+  background-color: white;
+  left: 0px;
+  bottom: 0px;
+  top: 70px;
+  background-color: var(--bg-grey-7);
+  border-right: 1px solid var(--grey-6);
+
+  input {
+    background-color: transparent;
+    border: 0px !important;
+    outline: transparent !important;
+  }
+
+  &::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--bg-grey-5);
+    border: 1px solid var(--bg-grey-7);
+    border-radius: 100px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: var(--bg-grey-7);
+  }
+  &::-webkit-scrollbar-corner {
+    background-color: var(--bg-grey-7);
+  }
+
+  .searchbar {
+    button {
+      min-height: 0px;
+    }
+  }
+
+  .btn-clear {
+    transition: opacity 0.2s;
+    i {
+      margin-top: 1px;
+    }
+  }
+  .pods {
+    .pod {
+      position: relative;
+      border: 0px !important;
+      &:hover,
+      &.active {
+        &::before {
+          content: '';
+          position: absolute;
+          display: block;
+          height: 24px;
+          width: 5px;
+          background-color: var(--ks-brightpurple);
+          left: 10px;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+      }
+    }
+  }
+}
+
+main {
+  margin-left: 240px;
+  margin-top: 70px;
+}

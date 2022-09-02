@@ -1,0 +1,36 @@
+<div class="d-flex flex-column shadow p-3 rounded">
+  <div class="d-flex title align-items-end">
+    <span class="font-weight-semibold">{{ podName }}</span>
+    <span class="font-size-xsmall ms-auto color-grey-3">Last 5 items</span>
+  </div>
+  <div class="d-flex justify-content-between color-grey-3 mt-3">
+    <span class="w-100">Transmitted</span>
+    <span class="w-100">Received</span>
+  </div>
+  <div class="d-flex justify-content-between color-grey-1 mt-2">
+    <div class="w-100 d-flex flex-column">
+      <span
+        *ngFor="
+          let transmitBytes of podData.transmitBytes?.slice(
+            podData.transmitBytes.length - 5 > 0 ? podData.transmitBytes.length - 5 : 0,
+            podData.transmitBytes.length
+          )
+        "
+      >
+        {{ transmitBytes | formatBytes }}
+      </span>
+    </div>
+    <div class="w-100 d-flex flex-column">
+      <span
+        *ngFor="
+          let receiveBytes of podData.receiveBytes?.slice(
+            podData.receiveBytes.length - 5 > 0 ? podData.receiveBytes.length - 5 : 0,
+            podData.receiveBytes.length
+          )
+        "
+      >
+        {{ receiveBytes | formatBytes }}
+      </span>
+    </div>
+  </div>
+</div>
