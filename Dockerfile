@@ -1,14 +1,29 @@
 # build stage
-FROM node:lts-alpine as build-stage-ui
+FROM node:lts-alpine as build-stage
+
 WORKDIR /app/ui
 COPY ui/package*.json ./
-RUN cd ui; npm install
+RUN npm install
 COPY ui/. .
-RUN cd ui; npm run build
+RUN npm run build
+
+WORKDIR /app/backend
+COPY backend/package*.json ./
+RUN npm install
+COPY backend/. .
+RUN npm run build --production
 
 # production stage
-FROM nginxinc/nginx-unprivileged:stable-alpine as production-stage
-COPY --from=build-stage-ui /app/dist/angular-app /usr/share/nginx/html
+FROM nginx as production-stage
+RUN apt-get update
+RUN apt-get install -y nodejs
+COPY --from=build-stage /app/ui/dist/podlox /usr/share/nginx/html
+COPY --from=build-stage /app/backend /app
+COPY start.sh /app/
 EXPOSE 8080
-USER 101
-CMD ["nginx", "-g", "daemon off;"]
+EXPOSE 4200
+ENV NODE_ENV=production
+ENV PORT=4200
+ENV NGINX_PORT=8080
+
+ENTRYPOINT ["/app/start.sh"]
