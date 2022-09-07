@@ -1,0 +1,44 @@
+:host {
+  display: block;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  background-color: rgba(black, 0.9);
+  .raw-header {
+    height: 70px;
+  }
+  code {
+    position: absolute;
+    top: 70px;
+    bottom: 0px;
+    right: 0px;
+    left: 0px;
+    overflow: auto;
+    &::-webkit-scrollbar {
+      width: 16px;
+      height: 16px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: var(--secondary);
+      border: 5px solid black;
+      border-radius: 10px;
+    }
+    &::-webkit-scrollbar-track {
+      background-color: rgb(0, 0, 0);
+    }
+    &::-webkit-scrollbar-corner {
+      background: rgb(0, 0, 0);
+    }
+    pre {
+      color: white;
+      font-size: 12px;
+      font-family: 'Courier New', Courier, monospace;
+      padding: 30px;
+      line-height: 14px;
+      overflow: visible;
+    }
+  }
+}

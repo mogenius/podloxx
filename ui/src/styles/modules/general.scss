@@ -12,6 +12,10 @@ html {
   }
 }
 
+.filter-white {
+  filter: brightness(100);
+}
+
 .page-header {
   position: relative;
   padding-left: 24px;

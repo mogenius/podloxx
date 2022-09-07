@@ -10,6 +10,7 @@ import { IStatsResponse } from '@lox/interfaces/stats-response.interface';
 })
 export class StatsService {
   private _records: StatsRecordModel = new StatsRecordModel();
+  private _rawData: string;
 
   constructor(private readonly _http: HttpClient) {}
 
@@ -28,6 +29,19 @@ export class StatsService {
         }),
         map(() => this._records)
       );
+  }
+
+  public cAdvisorRawData(): Observable<any> {
+    const url = this.cleanUpUrl(
+      `${environment.cAdvisorService.baseUrl}/${environment.cAdvisorService.cAdvisorRawData.endPoint}`
+    );
+
+    return this._http.request(environment.cAdvisorService.cAdvisorRawData.method ?? 'GET', url, {
+      headers: {
+        'Content-Type': environment.cAdvisorService.cAdvisorRawData.header.contentType
+      },
+      responseType: 'text'
+    });
   }
 
   private cleanUpUrl(str: string): string {

@@ -9,6 +9,7 @@ import { Subscription, take } from 'rxjs';
 })
 export class DashboardPageComponent implements OnInit, OnDestroy {
   private _subscriptions: Subscription;
+  private _showRaw: boolean = false;
   constructor(private readonly _statsService: StatsService) {}
 
   ngOnInit(): void {
@@ -38,6 +39,22 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     );
   }
 
+  public toggleRawData(state?: boolean): void {
+    if (!!state) {
+      this._showRaw = state;
+    } else {
+      this._showRaw = !this.showRaw;
+    }
+
+    if (this._showRaw) {
+      document.body.classList.add('unscroll');
+      document.getElementsByTagName('html')[0].classList.add('unscroll');
+    } else {
+      document.body.classList.remove('unscroll');
+      document.getElementsByTagName('html')[0].classList.remove('unscroll');
+    }
+  }
+
   get totalPods(): number {
     return this._statsService.records.selectedpodNames.length > 0
       ? this._statsService.records.selectedpodNames.length
@@ -58,5 +75,9 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
       total = total + value.receiveBytes[value.receiveBytes.length - 1];
     }
     return total;
+  }
+
+  get showRaw(): boolean {
+    return this._showRaw;
   }
 }

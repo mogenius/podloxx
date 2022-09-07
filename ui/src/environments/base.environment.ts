@@ -18,6 +18,14 @@ export interface IEnvironment {
     endPoint?: string;
     header?: any;
   };
+  cAdvisorService: {
+    baseUrl: string;
+    cAdvisorRawData: {
+      method?: RequestMethodEnum;
+      endPoint?: string;
+      header?: any;
+    };
+  };
 }
 
 export const baseEnvironment: IEnvironment = {
@@ -31,6 +39,18 @@ export const baseEnvironment: IEnvironment = {
     header: {
       // authorization: OVER AUTH INTERCEPTOR,
       contentType: 'application/json'
+    }
+  },
+
+  cAdvisorService: {
+    baseUrl: 'http://127.0.0.1:8001', // TODO Change
+    cAdvisorRawData: {
+      method: RequestMethodEnum.GET,
+      endPoint: '/api/v1/nodes/aks-devpool2-28911264-vmss000000/proxy/metrics/cadvisor',
+      header: {
+        // authorization: OVER AUTH INTERCEPTOR,
+        contentType: 'text/plain'
+      }
     }
   }
 };

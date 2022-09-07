@@ -14,6 +14,7 @@ import { TableListComponent } from './components/table-list/table-list.component
 import { TableListItemComponent } from './components/table-list/table-list-item/table-list-item.component';
 import { formatBytes } from './pipes/formatBytes';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { RawDataModalComponent } from './components/raw-data-modal/raw-data-modal.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     TopNavComponent,
     TableListComponent,
     TableListItemComponent,
-    formatBytes
+    formatBytes,
+    RawDataModalComponent
   ],
   imports: [FormsModule, HttpClientModule, BrowserModule, AppRoutingModule, NgChartsModule, NgbModule],
   providers: [],

@@ -4,10 +4,24 @@
     <span class="font-size-xsmall ms-auto color-grey-3">Last 5 items</span>
   </div>
   <div class="d-flex justify-content-between color-grey-3 mt-3">
-    <span class="w-100">Transmitted</span>
-    <span class="w-100">Received</span>
+    <span class="w-100">Timestamp</span>
+    <span class="w-100 ms-auto text-end">Transmitted</span>
+    <span class="w-100 text-end">Received</span>
   </div>
   <div class="d-flex justify-content-between color-grey-1 mt-2">
+    <div class="w-100 d-flex flex-column">
+      <span
+        *ngFor="
+          let timeStamp of podData.timeStamps?.slice(
+            podData.timeStamps.length - 5 > 0 ? podData.timeStamps.length - 5 : 0,
+            podData.timeStamps.length
+          )
+        "
+        class="font-size-small color-grey-1"
+      >
+        {{ formatFullDate(timeStamp) }}
+      </span>
+    </div>
     <div class="w-100 d-flex flex-column">
       <span
         *ngFor="
@@ -16,6 +30,7 @@
             podData.transmitBytes.length
           )
         "
+        class="font-size-small text-end"
       >
         {{ transmitBytes | formatBytes }}
       </span>
@@ -28,6 +43,7 @@
             podData.receiveBytes.length
           )
         "
+        class="font-size-small text-end"
       >
         {{ receiveBytes | formatBytes }}
       </span>

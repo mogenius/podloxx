@@ -11,23 +11,29 @@ export class StatsRecordModel {
   private _updateFilter: ReplaySubject<void> = new ReplaySubject<void>();
   private _record: IStatsRecord = {};
   private _filteredRecord: IStatsRecord = {};
+  private _timeStampArray: Date[] = [];
 
   constructor() {}
 
   public addRecord(rawData: IStatsResponse[]) {
     rawData.forEach((record) => {
       if (!!this._record[record.podName]) {
+        this._record[record.podName].timeStamps.push(new Date());
         this._record[record.podName].receiveBytes.push(+record.receiveBytes);
         this._record[record.podName].transmitBytes.push(+record.transmitBytes);
       } else {
         this._record[record.podName] = {
           index: this._podCount++,
           // If Data appears later then the rest, fill the previous values with 0
+          timeStamps: [...this._timeStampArray, new Date()],
           receiveBytes: [...Array.from(new Array(this._recordCount), () => 0), +record.receiveBytes],
           transmitBytes: [...Array.from(new Array(this._recordCount), () => 0), +record.transmitBytes]
         };
       }
+
+      //i If pods spawn after initialization, they will be filled with the missing data.
     });
+    this._timeStampArray.push(new Date());
     this._lastUpdate.next(moment());
 
     this._recordCount++;
