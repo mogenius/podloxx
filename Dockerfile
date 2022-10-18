@@ -17,7 +17,7 @@ RUN npm run build --production
 FROM nginx as production-stage
 RUN apt-get update
 RUN apt-get install -y nodejs
-COPY --from=build-stage /app/ui/dist/podlox /usr/share/nginx/html
+COPY --from=build-stage /app/ui/dist/podloxx /usr/share/nginx/html
 COPY --from=build-stage /app/backend /app
 COPY start.sh /app/
 EXPOSE 8080

@@ -1,5 +1,5 @@
 {
-  "name": "podlox",
+  "name": "podloxx",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -8,7 +8,7 @@
     "build": "ng build",
     "watch": "ng build --watch",
     "test": "ng test",
-    "prerender": "ng run podlox:prerender",
+    "prerender": "ng run podloxx:prerender",
     "lint": "ng lint",
     "semantic-release": "semantic-release"
   },

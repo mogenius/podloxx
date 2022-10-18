@@ -20,16 +20,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'podlox'`, () => {
+  it(`should have as title 'podloxx'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('podlox');
+    expect(app.title).toEqual('podloxx');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('podlox app is running!');
+    expect(compiled.querySelector('.content span')?.textContent).toContain('podloxx app is running!');
   });
 });

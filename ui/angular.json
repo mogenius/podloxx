@@ -8,7 +8,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "podlox": {
+    "podloxx": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -25,7 +25,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/podlox",
+            "outputPath": "dist/podloxx",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -66,10 +66,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "podlox:build:production"
+              "browserTarget": "podloxx:build:production"
             },
             "development": {
-              "browserTarget": "podlox:build:development"
+              "browserTarget": "podloxx:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -77,7 +77,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "podlox:build"
+            "browserTarget": "podloxx:build"
           }
         },
         "test": {
@@ -96,5 +96,5 @@
       }
     }
   },
-  "defaultProject": "podlox"
+  "defaultProject": "podloxx"
 }

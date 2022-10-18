@@ -1,0 +1,2 @@
+- replace DAEMONSETIMAGE with final image location inside mogenius ghcr
+- Setup license file
