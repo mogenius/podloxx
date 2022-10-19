@@ -22,8 +22,6 @@ ARG NEXT_VERSION=NOT_SET
 ARG GITUSER
 ARG GITPAT
 
-ENV BPF_TARGET=amd64 BPF_CFLAGS="-O2 -g -D__TARGET_ARCH_x86"
-
 RUN go env -w GOPRIVATE=github.com/mogenius
 RUN apk add git
 RUN git config --global url."https://$GITUSER:$GITPAT@github.com".insteadOf "https://github.com"

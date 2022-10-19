@@ -1,7 +1,6 @@
 package kubernetes
 
 import (
-	"flag"
 	"path/filepath"
 	"podloxx-collector/version"
 
@@ -29,21 +28,17 @@ var (
 )
 
 type KubeProvider struct {
-	ClientSet *kubernetes.Clientset
-	//kubernetesConfig clientcmd.ClientConfig
+	ClientSet    *kubernetes.Clientset
 	ClientConfig rest.Config
 }
 
 func NewKubeProviderLocal() (*KubeProvider, error) {
-	var kubeconfig *string
+	var kubeconfig string = ""
 	if home := homedir.HomeDir(); home != "" {
-		kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
-	} else {
-		kubeconfig = flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
+		kubeconfig = filepath.Join(home, ".kube", "config")
 	}
-	flag.Parse()
 
-	restConfig, errConfig := clientcmd.BuildConfigFromFlags("", *kubeconfig)
+	restConfig, errConfig := clientcmd.BuildConfigFromFlags("", kubeconfig)
 	if errConfig != nil {
 		panic(errConfig.Error())
 	}

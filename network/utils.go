@@ -1,11 +1,8 @@
 package network
 
 import (
-	"bytes"
 	"fmt"
-	"io"
 	"net"
-	"net/http"
 	"net/url"
 	"os"
 	"os/exec"
@@ -75,32 +72,6 @@ func ipIsContainedInList(ip net.IP, list []net.IP) bool {
 // Print infos to stdout in a human readable format (mostly debug and eye-candy)
 func printLog(entry structs.InterfaceStats) {
 	logger.Log.Info(entry.PodName, " => ", entry.PacketsSum, ": ", utils.BytesToHumanReadable(entry.TransmitBytes), "/", utils.BytesToHumanReadable(entry.ReceivedBytes), " (", utils.BytesToHumanReadable(entry.UnknownBytes), ") => ", utils.BytesToHumanReadable(entry.UnknownBytes+entry.TransmitBytes+entry.ReceivedBytes), " LOCAL: ", utils.BytesToHumanReadable(entry.LocalReceivedBytes+entry.LocalTransmitBytes))
-}
-
-// Send data to the API server to save it into the DB
-func sendData(url string, method string, apiKey string, jsonData []byte) {
-	client := &http.Client{}
-	req, errReq := http.NewRequest(method, url, bytes.NewBuffer(jsonData))
-	if errReq != nil {
-		logger.Log.Error(errReq)
-		return
-	}
-	req.Header.Add("Content-Type", "application/json")
-	//req.Header.Add("Authorization", apiKey)
-	req.Header.Add("x-authorization", apiKey)
-
-	res, errCl := client.Do(req)
-	if errCl != nil {
-		logger.Log.Error(errCl)
-		return
-	}
-	defer res.Body.Close()
-
-	var _, err = io.ReadAll(res.Body)
-	if err != nil {
-		logger.Log.Error(err)
-		return
-	}
 }
 
 // Get the index of the virtual namespace in the containers network namespace

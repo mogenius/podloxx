@@ -23,18 +23,18 @@ func removeDaemonset(kubeProvider *KubeProvider) {
 	daemonSetClient := kubeProvider.ClientSet.AppsV1().DaemonSets(apiv1.NamespaceDefault)
 
 	// DELETE DaemonSet
-	logger.Log.Info("Deleting daemonset ...")
+	logger.Log.Info("Deleting podloxx daemonset ...")
 	deletePolicy := metav1.DeletePropagationForeground
 	err := daemonSetClient.Delete(context.TODO(), DAEMONSETNAME, metav1.DeleteOptions{PropagationPolicy: &deletePolicy})
 	if err != nil {
 		panic(err)
 	}
-	logger.Log.Info("Deleted daemonset.")
+	logger.Log.Info("Deleted podloxx daemonset.")
 }
 
 func removeRbac(kubeProvider *KubeProvider) {
 	// CREATE RBAC
-	logger.Log.Info("Deleting RBAC ...")
+	logger.Log.Info("Deleting podloxx RBAC ...")
 	err := kubeProvider.ClientSet.CoreV1().ServiceAccounts(NAMESPACE).Delete(context.TODO(), SERVICEACCOUNTNAME, metav1.DeleteOptions{})
 	if err != nil {
 		panic(err)
@@ -47,5 +47,5 @@ func removeRbac(kubeProvider *KubeProvider) {
 	if err != nil {
 		panic(err)
 	}
-	logger.Log.Info("RBAC deleted.")
+	logger.Log.Info("Deleted podloxx RBAC.")
 }

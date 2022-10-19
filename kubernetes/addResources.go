@@ -63,7 +63,7 @@ func addRbac(kubeProvider *KubeProvider) error {
 	}
 
 	// CREATE RBAC
-	logger.Log.Info("Creating RBAC ...")
+	logger.Log.Info("Creating podloxx RBAC ...")
 	_, err := kubeProvider.ClientSet.CoreV1().ServiceAccounts(NAMESPACE).Create(context.TODO(), serviceAccount, metav1.CreateOptions{})
 	if err != nil && !k8serrors.IsAlreadyExists(err) {
 		return err
@@ -76,7 +76,7 @@ func addRbac(kubeProvider *KubeProvider) error {
 	if err != nil && !k8serrors.IsAlreadyExists(err) {
 		return err
 	}
-	logger.Log.Info("RBAC created.")
+	logger.Log.Info("Created podloxx RBAC.")
 	return nil
 }
 
@@ -172,10 +172,10 @@ func addDaemonSet(kubeProvider *KubeProvider) {
 	daemonSet.WithSpec(applyconfapp.DaemonSetSpec().WithSelector(labelSelector).WithTemplate(podTemplate))
 
 	// Create DaemonSet
-	logger.Log.Info("Creating daemonset ...")
+	logger.Log.Info("Creating podloxx daemonset ...")
 	result, err := daemonSetClient.Apply(context.TODO(), daemonSet, applyOptions)
 	if err != nil {
 		panic(err)
 	}
-	logger.Log.Info("Created daemonset ", result.GetObjectMeta().GetName(), ".")
+	logger.Log.Info("Created podloxx daemonset.", result.GetObjectMeta().GetName(), ".")
 }

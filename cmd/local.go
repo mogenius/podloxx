@@ -18,7 +18,7 @@ var localCmd = &cobra.Command{
 	Run the application on your local machine's network devices. 
 	Awesome hacker view window. Should always be visible to impress non-it-folks.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		go network.MonitorAll(true, "")
+		go network.MonitorLocal()
 		api.InitApi()
 
 		// quit := make(chan os.Signal)

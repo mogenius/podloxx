@@ -1,9 +1,7 @@
 package network
 
 import (
-	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"net"
 	"os"
@@ -53,8 +51,7 @@ var APIKEY string
 var INTERFACEPREFIX string
 
 func Init() {
-	APIHOST = os.Getenv("QUEUE_HOST_URL")
-	APIKEY = os.Getenv("QUEUE_API_KEY")
+	APIHOST = os.Getenv("API_URL")
 	INTERFACEPREFIX = os.Getenv("INTERFACE_PREFIX")
 }
 
@@ -89,8 +86,9 @@ func mainLoop() {
 	reportData()
 }
 
-func monitorLocal() {
+func MonitorLocal() {
 	devices := GetAllDevices(false)
+	var interesstingDevices []pcap.Interface
 	for _, device := range devices {
 		var ip string = ""
 		for _, address := range device.Addresses {
@@ -104,11 +102,35 @@ func monitorLocal() {
 		if ip == "" {
 			continue
 		}
-
-		// TODO rewrite local output
-		// go monitorInterface("LOCAL", "LOCAL", device.Name, ip, "LOCAL", "LOCAL")
-		logger.Log.Error("TODO: REWRITE CODE HERE!")
+		interesstingDevices = append(interesstingDevices, device)
 	}
+
+	t := table.NewWriter()
+	t.SetOutputMirror(os.Stdout)
+	t.AppendHeader(table.Row{"interface", "addresses"})
+	var interfaceCount int = 0
+	var addressCount int = 0
+	for _, device := range interesstingDevices {
+		if len(device.Addresses) > 0 {
+			var addresses []string
+			for _, address := range device.Addresses {
+				addresses = append(addresses, address.IP.String())
+				addressCount++
+				if len(address.IP) == 4 {
+					var ip = address.IP.String()
+					go monitorInterface("LOCAL", "LOCAL", device.Name, ip, "LOCAL", "LOCAL")
+				}
+			}
+			t.AppendRow(
+				table.Row{device.Name, strings.Join(addresses[:], ", ")},
+			)
+			interfaceCount++
+		}
+	}
+	t.AppendSeparator()
+	t.AppendFooter(table.Row{"Count", "Count"})
+	t.AppendFooter(table.Row{interfaceCount, addressCount})
+	t.Render()
 }
 
 // Check if new interfaces need to be tapped
@@ -180,21 +202,21 @@ func podWatch(eventCount *uint64) error {
 }
 
 // Monitor an host pod interface with pcap
-func monitorInterface(pod v1.Pod, namespace string, interfaceName string, ip string, startTime string, containerId string) {
-	logger.Log.Noticef("Start monitoring: %s - %s (%s)", pod.Name, interfaceName, ip)
+func monitorInterface(podName string, namespace string, interfaceName string, ip string, startTime string, containerId string) {
+	logger.Log.Noticef("Start monitoring: %s - %s (%s)", podName, interfaceName, ip)
 	containerIp := net.ParseIP(ip)
 
 	handle, err := pcap.OpenLive(interfaceName, DEFAULTSNAPLEN, true, pcap.BlockForever)
-	entry := structs.InitializeInterface(interfaceName, ip, pod.Name, namespace, startTime, containerId, true)
+	entry := structs.InitializeInterface(interfaceName, ip, podName, namespace, startTime, containerId, true)
 	mutex.Lock()
 	TrafficData[interfaceName] = &entry
 	handles[interfaceName] = handle
 	mutex.Unlock()
 	if err != nil {
-		logger.Log.Errorf("ERROR (%s/%s): %s", pod.Name, interfaceName, err)
+		logger.Log.Errorf("ERROR (%s/%s): %s", podName, interfaceName, err)
 		return
 	}
-	defer stopMonitoring(pod.Name)
+	defer stopMonitoring(podName)
 
 	packetSource := gopacket.NewPacketSource(handle, handle.LinkType())
 	packets := packetSource.Packets()
@@ -302,19 +324,20 @@ func printEntriesTable() {
 	debugTable.Render()
 }
 
-// Report Data to API server in order to save it into the DB
+// TOODO: WEBSOCKET
+// Report Data to API server
 func reportData() {
-	for id, entry := range TrafficData {
-		lastPacketSum, exists := lastTrafficDataBytesSum[id]
-		if exists == false || (entry.TransmitBytes+entry.ReceivedBytes) >= lastPacketSum+BYTES_CHANGE_SEND_TRESHHOLD {
-			// SEND DATA TO QUEUE
-			dataBytes := new(bytes.Buffer)
-			json.NewEncoder(dataBytes).Encode(entry)
-			go sendData(APIHOST+"/bull-queue/add-queue", "POST", APIKEY, dataBytes.Bytes())
-			httpRequestCount++
-			lastTrafficDataBytesSum[id] = entry.TransmitBytes + entry.ReceivedBytes
-		}
-	}
+	// for id, entry := range TrafficData {
+	// 	lastPacketSum, exists := lastTrafficDataBytesSum[id]
+	// 	if exists == false || (entry.TransmitBytes+entry.ReceivedBytes) >= lastPacketSum+BYTES_CHANGE_SEND_TRESHHOLD {
+	// 		// SEND DATA TO API
+	// 		dataBytes := new(bytes.Buffer)
+	// 		json.NewEncoder(dataBytes).Encode(entry)
+	// 		go sendData(APIHOST+"/bull-queue/add-queue", "POST", APIKEY, dataBytes.Bytes())
+	// 		httpRequestCount++
+	// 		lastTrafficDataBytesSum[id] = entry.TransmitBytes + entry.ReceivedBytes
+	// 	}
+	// }
 }
 
 // Create the connection between Pod and VETH to start monitoring
@@ -347,7 +370,7 @@ func tapInterface(containerId string, pod v1.Pod) error {
 		}
 		logger.Log.Info(pid, index, vethName, pod.Name)
 		if _, exists := TrafficData[vethName]; !exists {
-			go monitorInterface(pod, pod.Namespace, vethName, pod.Status.PodIP, pod.Status.StartTime.Format(time.RFC3339), containerId)
+			go monitorInterface(pod.Name, pod.Namespace, vethName, pod.Status.PodIP, pod.Status.StartTime.Format(time.RFC3339), containerId)
 		}
 	}
 	return nil
