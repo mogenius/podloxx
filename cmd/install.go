@@ -18,6 +18,7 @@ var installCmd = &cobra.Command{
 	Please run cleanup if you want to remove it again.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		kubernetes.Deploy()
+		kubernetes.StartPortForward(true)
 	},
 }
 

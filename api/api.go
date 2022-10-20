@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -15,19 +16,29 @@ import (
 
 	"podloxx-collector/network"
 
+	"github.com/gorilla/websocket"
 	"github.com/mogenius/mo-go/logger"
 
 	"github.com/gin-gonic/gin"
 )
 
+var upGrader = websocket.Upgrader{
+	CheckOrigin: func(r *http.Request) bool {
+		return true
+	},
+}
+
 func InitApi() {
 	router := gin.Default()
-	router.GET("/traffic", getTraffics)
+	router.GET("/traffic", getTraffic)
+	router.GET("/traffic-ws", getTrafficWs)
+	router.StaticFile("/traffic-test", "./ui/test-ws.html")
 
 	srv := &http.Server{
-		Addr:    ":8080",
+		Addr:    fmt.Sprintf(":%s", os.Getenv("API_PORT")),
 		Handler: router,
 	}
+	fmt.Println(srv.Addr)
 
 	// Initializing the server in a goroutine so that
 	// it won't block the graceful shutdown handling below
@@ -59,7 +70,7 @@ func InitApi() {
 	logger.Log.Warning("Server exiting")
 }
 
-func getTraffics(c *gin.Context) {
+func getTraffic(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, &network.TrafficData)
 }
 
@@ -72,4 +83,23 @@ func printPrettyPost(c *gin.Context) {
 	}
 
 	fmt.Println(string(out.Bytes()))
+}
+
+// webSocket returns json format
+func getTrafficWs(c *gin.Context) {
+	//Upgrade get request to webSocket protocol
+	ws, err := upGrader.Upgrade(c.Writer, c.Request, nil)
+	if err != nil {
+		log.Println("error get connection")
+		log.Fatal(err)
+	}
+	defer ws.Close()
+
+	for pkt := range network.ReceiverChannel {
+		err = ws.WriteJSON(&pkt)
+		if err != nil {
+			log.Println("error write json: " + err.Error())
+			return
+		}
+	}
 }

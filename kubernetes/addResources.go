@@ -2,6 +2,7 @@ package kubernetes
 
 import (
 	"context"
+	"os"
 
 	"github.com/mogenius/mo-go/logger"
 
@@ -23,6 +24,7 @@ func Deploy() {
 	}
 
 	addRbac(provider)
+	addRedis(provider)
 	addDaemonSet(provider)
 }
 
@@ -88,8 +90,8 @@ func addDaemonSet(kubeProvider *KubeProvider) {
 	daemonsetContainer.WithImage(DAEMONSETIMAGE)
 	daemonsetContainer.WithImagePullPolicy(core.PullAlways)
 	daemonsetContainer.WithEnv(
-		applyconfcore.EnvVar().WithName("STAGE").WithValue("dev"),
-		applyconfcore.EnvVar().WithName("INTERFACE_PREFIX").WithValue("azv"),
+		applyconfcore.EnvVar().WithName("STAGE").WithValue(os.Getenv("STAGE")),
+		applyconfcore.EnvVar().WithName("INTERFACE_PREFIX").WithValue(os.Getenv("INTERFACE_PREFIX")),
 		applyconfcore.EnvVar().WithName("OWN_NODE_NAME").WithValueFrom(
 			applyconfcore.EnvVarSource().WithFieldRef(
 				applyconfcore.ObjectFieldSelector().WithAPIVersion("v1").WithFieldPath("spec.nodeName"),
@@ -178,4 +180,58 @@ func addDaemonSet(kubeProvider *KubeProvider) {
 		panic(err)
 	}
 	logger.Log.Info("Created podloxx daemonset.", result.GetObjectMeta().GetName(), ".")
+}
+
+func addRedis(kubeProvider *KubeProvider) {
+	deploymentClient := kubeProvider.ClientSet.AppsV1().Deployments(apiv1.NamespaceDefault)
+
+	deploymentContainer := applyconfcore.Container()
+	deploymentContainer.WithName(REDISNAME)
+	deploymentContainer.WithImage(REDISIMAGE)
+	deploymentContainer.WithEnv(
+		applyconfcore.EnvVar().WithName("STAGE").WithValue(os.Getenv("STAGE")),
+	)
+	agentResourceLimits := core.ResourceList{
+		"cpu":               resource.MustParse("300m"),
+		"memory":            resource.MustParse("256Mi"),
+		"ephemeral-storage": resource.MustParse("100Mi"),
+	}
+	agentResourceRequests := core.ResourceList{
+		"cpu":               resource.MustParse("100m"),
+		"memory":            resource.MustParse("128Mi"),
+		"ephemeral-storage": resource.MustParse("10Mi"),
+	}
+	agentResources := applyconfcore.ResourceRequirements().WithRequests(agentResourceRequests).WithLimits(agentResourceLimits)
+	deploymentContainer.WithResources(agentResources)
+
+	podSpec := applyconfcore.PodSpec()
+	podSpec.WithTerminationGracePeriodSeconds(0)
+	podSpec.WithServiceAccountName(SERVICEACCOUNTNAME)
+
+	podSpec.WithContainers(deploymentContainer)
+
+	applyOptions := metav1.ApplyOptions{
+		Force:        true,
+		FieldManager: REDISNAME,
+	}
+
+	labelSelector := applyconfmeta.LabelSelector()
+	labelSelector.WithMatchLabels(map[string]string{"app": REDISNAME})
+
+	podTemplate := applyconfcore.PodTemplateSpec()
+	podTemplate.WithLabels(map[string]string{
+		"app": REDISNAME,
+	})
+	podTemplate.WithSpec(podSpec)
+
+	deployment := applyconfapp.Deployment(REDISNAME, NAMESPACE)
+	deployment.WithSpec(applyconfapp.DeploymentSpec().WithSelector(labelSelector).WithTemplate(podTemplate))
+
+	// Create Redis Deployment
+	logger.Log.Info("Creating podloxx redis ...")
+	result, err := deploymentClient.Apply(context.TODO(), deployment, applyOptions)
+	if err != nil {
+		panic(err)
+	}
+	logger.Log.Info("Created podloxx redis.", result.GetObjectMeta().GetName(), ".")
 }

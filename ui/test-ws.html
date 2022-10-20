@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>PodLoxx Websocket Raw</title>
+  </head>
+  <body style="background-color:#222121;">
+    <h1 style="color:white;">PodLoxx Websocket Raw</h1>
+    <p style="color:white;" id="connection-state"></p>
+    <p style="color:white;" id="message-json-raw"></p>
+    <script>
+      function dataWS() {
+        var ws = new WebSocket('ws://localhost:1337/traffic-ws');
+        
+        ws.onopen = function (evt) {
+          console.log('Connection open ...');
+          document.getElementById('connection-state').innerText = "Connection: OPEN";
+        };
+        
+        ws.onmessage = function (evt) {
+          console.log('Received Message: ' + evt.data);
+          document.getElementById('message-json-raw').insertAdjacentText('afterbegin', evt.data);
+        };
+        
+        ws.onclose = function (evt) {
+          console.log('Connection closed.');
+          document.getElementById('connection-state').innerText = "Connection: CLOSED";
+        };
+      }
+      dataWS();
+    </script>
+  </body>
+</html>

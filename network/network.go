@@ -29,7 +29,7 @@ import (
 
 const (
 	DEFAULTSNAPLEN                     = 65536   // Max Size of TCP Packets
-	BYTES_CHANGE_SEND_TRESHHOLD uint64 = 1048576 // wait until X bytes are gathered until we send an update to the API server
+	BYTES_CHANGE_SEND_TRESHHOLD uint64 = 1048576 // 1048576 wait until X bytes are gathered until we send an update to the API server
 )
 
 var TrafficData = make(map[string]*structs.InterfaceStats) // KEY: interfaceName e.g. veth1234abc
@@ -47,11 +47,15 @@ var eventCount uint64 = 0
 var httpRequestCount uint64 = 0
 
 var APIHOST string
+var APIPORT string
 var APIKEY string
 var INTERFACEPREFIX string
 
+var ReceiverChannel = make(chan structs.InterfaceStats)
+
 func Init() {
-	APIHOST = os.Getenv("API_URL")
+	APIHOST = os.Getenv("API_HOST")
+	APIPORT = os.Getenv("API_PORT")
 	INTERFACEPREFIX = os.Getenv("INTERFACE_PREFIX")
 }
 
@@ -83,7 +87,6 @@ func mainLoop() {
 	checkTaps()
 	loadContainerPids()
 	printEntriesTable()
-	reportData()
 }
 
 func MonitorLocal() {
@@ -118,7 +121,7 @@ func MonitorLocal() {
 				addressCount++
 				if len(address.IP) == 4 {
 					var ip = address.IP.String()
-					go monitorInterface("LOCAL", "LOCAL", device.Name, ip, "LOCAL", "LOCAL")
+					go monitorInterface(ip, "LOCAL", device.Name, ip, time.Now().Format(time.RFC3339), "LOCAL")
 				}
 			}
 			t.AppendRow(
@@ -131,6 +134,12 @@ func MonitorLocal() {
 	t.AppendFooter(table.Row{"Count", "Count"})
 	t.AppendFooter(table.Row{interfaceCount, addressCount})
 	t.Render()
+
+	for {
+		reportData()
+		printEntriesTable()
+		time.Sleep(10 * time.Second)
+	}
 }
 
 // Check if new interfaces need to be tapped
@@ -207,7 +216,13 @@ func monitorInterface(podName string, namespace string, interfaceName string, ip
 	containerIp := net.ParseIP(ip)
 
 	handle, err := pcap.OpenLive(interfaceName, DEFAULTSNAPLEN, true, pcap.BlockForever)
-	entry := structs.InitializeInterface(interfaceName, ip, podName, namespace, startTime, containerId, true)
+
+	var runsInCluster = true
+	if containerId == "LOCAL" && namespace == "LOCAL" {
+		runsInCluster = false
+	}
+
+	entry := structs.InitializeInterface(interfaceName, ip, podName, namespace, startTime, containerId, runsInCluster)
 	mutex.Lock()
 	TrafficData[interfaceName] = &entry
 	handles[interfaceName] = handle
@@ -324,20 +339,19 @@ func printEntriesTable() {
 	debugTable.Render()
 }
 
-// TOODO: WEBSOCKET
 // Report Data to API server
 func reportData() {
-	// for id, entry := range TrafficData {
-	// 	lastPacketSum, exists := lastTrafficDataBytesSum[id]
-	// 	if exists == false || (entry.TransmitBytes+entry.ReceivedBytes) >= lastPacketSum+BYTES_CHANGE_SEND_TRESHHOLD {
-	// 		// SEND DATA TO API
-	// 		dataBytes := new(bytes.Buffer)
-	// 		json.NewEncoder(dataBytes).Encode(entry)
-	// 		go sendData(APIHOST+"/bull-queue/add-queue", "POST", APIKEY, dataBytes.Bytes())
-	// 		httpRequestCount++
-	// 		lastTrafficDataBytesSum[id] = entry.TransmitBytes + entry.ReceivedBytes
-	// 	}
-	// }
+	for id, entry := range TrafficData {
+		lastPacketSum, exists := lastTrafficDataBytesSum[id]
+		if exists == false || (entry.TransmitBytes+entry.ReceivedBytes) >= lastPacketSum+BYTES_CHANGE_SEND_TRESHHOLD {
+			// SEND DATA TO API
+			// dataBytes := new(bytes.Buffer)
+			// json.NewEncoder(dataBytes).Encode(entry)
+			ReceiverChannel <- *entry
+			httpRequestCount++
+			lastTrafficDataBytesSum[id] = entry.TransmitBytes + entry.ReceivedBytes
+		}
+	}
 }
 
 // Create the connection between Pod and VETH to start monitoring

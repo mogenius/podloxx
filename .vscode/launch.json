@@ -7,7 +7,7 @@
             "request": "launch",
             "mode": "debug",
             "program": "main.go",
-            "args": ["test"],
+            "args": ["local"],
             "asRoot": true,
             "console": "integratedTerminal"
         }

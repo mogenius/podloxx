@@ -17,6 +17,7 @@ func Remove() {
 
 	removeDaemonset(provider)
 	removeRbac(provider)
+	removeRedis(provider)
 }
 
 func removeDaemonset(kubeProvider *KubeProvider) {
@@ -30,6 +31,19 @@ func removeDaemonset(kubeProvider *KubeProvider) {
 		panic(err)
 	}
 	logger.Log.Info("Deleted podloxx daemonset.")
+}
+
+func removeRedis(kubeProvider *KubeProvider) {
+	deploymentClient := kubeProvider.ClientSet.AppsV1().Deployments(apiv1.NamespaceDefault)
+
+	// DELETE REDIS
+	logger.Log.Info("Deleting podloxx redis ...")
+	deletePolicy := metav1.DeletePropagationForeground
+	err := deploymentClient.Delete(context.TODO(), REDISNAME, metav1.DeleteOptions{PropagationPolicy: &deletePolicy})
+	if err != nil {
+		panic(err)
+	}
+	logger.Log.Info("Deleted podloxx redis.")
 }
 
 func removeRbac(kubeProvider *KubeProvider) {

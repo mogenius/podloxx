@@ -2,3 +2,5 @@ tmp
 bin
 
 build-push-ghcr.sh
+
+.DS_Store

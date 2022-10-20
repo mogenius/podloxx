@@ -4,8 +4,6 @@ import (
 	"path/filepath"
 	"podloxx-collector/version"
 
-	"github.com/mogenius/mo-go/logger"
-
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
@@ -16,6 +14,8 @@ var (
 	NAMESPACE        = "default"
 	DAEMONSETNAME    = "podloxx"
 	DAEMONSETIMAGE   = "ghcr.io/mogenius/podloxx-collector:" + version.Ver
+	REDISNAME        = "podloxx-redis"
+	REDISIMAGE       = "redis:latest"
 	PROCFSVOLUMENAME = "proc"
 	PROCFSMOUNTPATH  = "/hostproc"
 	SYSFSVOLUMENAME  = "sys"
@@ -48,8 +48,6 @@ func NewKubeProviderLocal() (*KubeProvider, error) {
 		panic(errClientSet.Error())
 	}
 
-	logger.Log.Debugf("K8s client config (init with .kube/config), host: %s", restConfig.Host)
-
 	return &KubeProvider{
 		ClientSet:    clientSet,
 		ClientConfig: *restConfig,
@@ -66,8 +64,6 @@ func NewKubeProviderInCluster() (*KubeProvider, error) {
 	if err != nil {
 		panic(err.Error())
 	}
-
-	logger.Log.Debugf("K8s client config (init InCluster), host: %s", config.Host)
 
 	return &KubeProvider{
 		ClientSet:    clientset,
