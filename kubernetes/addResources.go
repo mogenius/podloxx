@@ -3,6 +3,7 @@ package kubernetes
 import (
 	"context"
 	"os"
+	"time"
 
 	"github.com/mogenius/mo-go/logger"
 
@@ -24,10 +25,13 @@ func Deploy() {
 		panic(err)
 	}
 
+	applyNamespace(provider)
 	addRbac(provider)
 	addRedis(provider)
-	addRedisService(provider)
+	//addRedisService(provider)
 	addDaemonSet(provider)
+	time.Sleep(3 * time.Second) // TODO: <-- this is realy dumb. find a better solution
+	go StartPortForward(provider, false)
 }
 
 func addRbac(kubeProvider *KubeProvider) error {
@@ -82,6 +86,24 @@ func addRbac(kubeProvider *KubeProvider) error {
 	}
 	logger.Log.Info("Created podloxx RBAC.")
 	return nil
+}
+
+func applyNamespace(kubeProvider *KubeProvider) {
+	serviceClient := kubeProvider.ClientSet.CoreV1().Namespaces()
+
+	namespace := applyconfcore.Namespace(NAMESPACE)
+
+	applyOptions := metav1.ApplyOptions{
+		Force:        true,
+		FieldManager: REDISSERVICENAME,
+	}
+
+	logger.Log.Info("Creating podloxx namespace ...")
+	result, err := serviceClient.Apply(context.TODO(), namespace, applyOptions)
+	if err != nil {
+		logger.Log.Error(err)
+	}
+	logger.Log.Info("Created podloxx namespace", result.GetObjectMeta().GetName(), ".")
 }
 
 func addDaemonSet(kubeProvider *KubeProvider) {

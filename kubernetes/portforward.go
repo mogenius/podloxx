@@ -13,7 +13,6 @@ import (
 	"strings"
 	"sync"
 	"syscall"
-	"time"
 
 	"github.com/mogenius/mo-go/logger"
 	v1 "k8s.io/api/core/v1"
@@ -35,93 +34,68 @@ type PortForwardAPodRequest struct {
 	ReadyCh chan struct{}
 }
 
-func StartPortForward(useLocalKubeConfig bool) {
-	pods := make([]v1.Pod, 0)
-
-	logger.Log.Info("PORT_FORWARD: Waiting for pods to become available ...")
-
-	for {
-		var newPods = getPodloxxPodnames(useLocalKubeConfig)
-		if len(newPods) > 0 {
-			pods = append(pods, newPods...)
-			break
-		}
-		time.Sleep(1 * time.Second)
-		logger.Log.Infof(".")
+func StartPortForward(kubeProvider *KubeProvider, useLocalKubeConfig bool) {
+	pod, err := getPodRedisPodname(kubeProvider, useLocalKubeConfig)
+	if err != nil {
+		logger.Log.Error(err)
 	}
 
-	for _, pod := range pods {
-		logger.Log.Info("Starting PortForward for %s ...", pod.Name)
+	logger.Log.Infof("Starting PortForward for %s ...", pod.Name)
 
-		var wg sync.WaitGroup
-		wg.Add(1)
+	var wg sync.WaitGroup
+	wg.Add(1)
 
-		// stopCh control the port forwarding lifecycle. When it gets closed the
-		// port forward will terminate
-		stopCh := make(chan struct{}, 1)
-		// readyCh communicate when the port forward is ready to get traffic
-		readyCh := make(chan struct{})
-		// stream is used to tell the port forwarder where to place its output or
-		// where to expect input if needed. For the port forwarding we just need
-		// the output eventually
-		stream := genericclioptions.IOStreams{
-			In:     os.Stdin,
-			Out:    os.Stdout,
-			ErrOut: os.Stderr,
-		}
-
-		// managing termination signal from the terminal. As you can see the stopCh
-		// gets closed to gracefully handle its termination.
-		sigs := make(chan os.Signal, 1)
-		signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
-		go func() {
-			<-sigs
-			fmt.Println("Bye...")
-			close(stopCh)
-			wg.Done()
-		}()
-
-		go func() {
-			// PortForward the pod specified from its port 9090 to the local port
-			// 8080
-			err := portForwardAPod(useLocalKubeConfig, PortForwardAPodRequest{
-				Pod:       pod,
-				LocalPort: 8080,
-				PodPort:   1337,
-				Streams:   stream,
-				StopCh:    stopCh,
-				ReadyCh:   readyCh,
-			})
-			if err != nil {
-				panic(err)
-			}
-		}()
-
-		select {
-		case <-readyCh:
-			break
-		}
-		println("Port forwarding is ready to get traffic. have fun!")
-
-		wg.Wait()
+	// stopCh control the port forwarding lifecycle. When it gets closed the
+	// port forward will terminate
+	stopCh := make(chan struct{}, 1)
+	// readyCh communicate when the port forward is ready to get traffic
+	readyCh := make(chan struct{})
+	// stream is used to tell the port forwarder where to place its output or
+	// where to expect input if needed. For the port forwarding we just need
+	// the output eventually
+	stream := genericclioptions.IOStreams{
+		In:     os.Stdin,
+		Out:    os.Stdout,
+		ErrOut: os.Stderr,
 	}
+
+	// managing termination signal from the terminal. As you can see the stopCh
+	// gets closed to gracefully handle its termination.
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+	go func() {
+		<-sigs
+		fmt.Println("Bye...")
+		close(stopCh)
+		wg.Done()
+	}()
+
+	go func() {
+		// PortForward the pod specified from its port 9090 to the local port
+		// 8080
+		err := portForwardAPod(kubeProvider, useLocalKubeConfig, PortForwardAPodRequest{
+			Pod:       *pod,
+			LocalPort: int(REDISPORT),
+			PodPort:   int(REDISPORT),
+			Streams:   stream,
+			StopCh:    stopCh,
+			ReadyCh:   readyCh,
+		})
+		if err != nil {
+			panic(err)
+		}
+	}()
+
+	select {
+	case <-readyCh:
+		break
+	}
+	println("Port forwarding is ready to get traffic. have fun!")
+
+	wg.Wait()
 }
 
-func portForwardAPod(useLocalKubeConfig bool, req PortForwardAPodRequest) error {
-	const localPort = 8080
-	const PodPort = 1337
-
-	var kubeProvider *KubeProvider
-	var err error
-	if useLocalKubeConfig == true {
-		kubeProvider, err = NewKubeProviderLocal()
-	} else {
-		kubeProvider, err = NewKubeProviderInCluster()
-	}
-	if err != nil {
-		panic(err)
-	}
-
+func portForwardAPod(kubeProvider *KubeProvider, useLocalKubeConfig bool, req PortForwardAPodRequest) error {
 	path := fmt.Sprintf("/api/v1/namespaces/%s/pods/%s/portforward", req.Pod.Namespace, req.Pod.Name)
 	hostIP := strings.TrimLeft(kubeProvider.ClientConfig.Host, "htps:/")
 
@@ -138,29 +112,17 @@ func portForwardAPod(useLocalKubeConfig bool, req PortForwardAPodRequest) error 
 	return fw.ForwardPorts()
 }
 
-func getPodloxxPodnames(useLocalKubeConfig bool) []v1.Pod {
-	var result []v1.Pod
-	var kubeProvider *KubeProvider
-	var err error
-	if useLocalKubeConfig == true {
-		kubeProvider, err = NewKubeProviderLocal()
-	} else {
-		kubeProvider, err = NewKubeProviderInCluster()
-	}
-	if err != nil {
-		panic(err)
-	}
-
-	labelSelector := fmt.Sprintf("app=podloxx")
-	pods, err := kubeProvider.ClientSet.CoreV1().Pods("").List(context.TODO(), metav1.ListOptions{LabelSelector: labelSelector})
+func getPodRedisPodname(kubeProvider *KubeProvider, useLocalKubeConfig bool) (*v1.Pod, error) {
+	labelSelector := fmt.Sprintf("app=%s", REDISNAME)
+	pods, err := kubeProvider.ClientSet.CoreV1().Pods(NAMESPACE).List(context.TODO(), metav1.ListOptions{LabelSelector: labelSelector})
 
 	for _, pod := range pods.Items {
-		result = append(result, pod)
+		return &pod, nil
 	}
 
 	if err != nil {
 		fmt.Println("Error:", err)
-		return result
+		return nil, err
 	}
-	return result
+	return nil, fmt.Errorf("Neither pod found nor error received.")
 }

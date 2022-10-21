@@ -4,12 +4,15 @@ Copyright © 2022 mogenius, Benedikt Iltisberger
 package cmd
 
 import (
+	"fmt"
 	"os"
 	"os/signal"
+	"podloxx-collector/api"
 	"podloxx-collector/kubernetes"
 	"syscall"
 
 	"github.com/mogenius/mo-go/logger"
+	"github.com/mogenius/mo-go/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -22,6 +25,8 @@ var startCmd = &cobra.Command{
 	App will cleanup after being terminated with CTRL+C automatically.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		kubernetes.Deploy()
+		utils.OpenBrowser(fmt.Sprintf("http://%s:%s/traffic", os.Getenv("API_HOST"), os.Getenv("API_PORT")))
+		api.InitApi()
 
 		quit := make(chan os.Signal)
 		signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)

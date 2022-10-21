@@ -6,6 +6,7 @@ go 1.19
 
 require (
 	github.com/gin-gonic/gin v1.8.1
+	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/google/gopacket v1.1.19
 	github.com/gorilla/websocket v1.5.0
 	github.com/jedib0t/go-pretty/v6 v6.3.9
@@ -57,6 +58,7 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/monochromegane/go-gitignore v0.0.0-20200626010858-205db1a8cc00 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
+	github.com/onsi/ginkgo v1.16.5 // indirect
 	github.com/op/go-logging v0.0.0-20160315200505-970db520ece7 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.5 // indirect
 	github.com/peterbourgon/diskv v2.0.1+incompatible // indirect

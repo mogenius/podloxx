@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	NAMESPACE              = "default"
+	NAMESPACE              = "podloxx"
 	DAEMONSETNAME          = "podloxx"
 	DAEMONSETIMAGE         = "ghcr.io/mogenius/podloxx-collector:" + version.Ver
 	REDISNAME              = "podloxx-redis"

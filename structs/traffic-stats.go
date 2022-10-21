@@ -17,6 +17,7 @@ type InterfaceStats struct {
 	Ip                 string                         `json:"ip"`
 	PodName            string                         `json:"podName"`
 	Namespace          string                         `json:"namespace"`
+	Node               string                         `json:"node"`
 	ContainerId        string                         `json:"containerId"`
 	PacketsSum         uint64                         `json:"packetsSum"`
 	TransmitBytes      uint64                         `json:"transmitBytes"`
@@ -61,6 +62,7 @@ func InitializeInterface(name string, ip string, podName string, namespace strin
 	entry.PodName = podName
 	entry.ContainerId = containerId
 	entry.Namespace = namespace
+	entry.Node = os.Getenv("OWN_NODE_NAME")
 	if runsInCluster {
 		entry.ReceivedStartBytes = loadUint64FromFile("/sys/class/net/" + name + "/statistics/rx_bytes")
 		entry.TransmitStartBytes = loadUint64FromFile("/sys/class/net/" + name + "/statistics/tx_bytes")
