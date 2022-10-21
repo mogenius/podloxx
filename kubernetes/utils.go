@@ -11,15 +11,18 @@ import (
 )
 
 var (
-	NAMESPACE        = "default"
-	DAEMONSETNAME    = "podloxx"
-	DAEMONSETIMAGE   = "ghcr.io/mogenius/podloxx-collector:" + version.Ver
-	REDISNAME        = "podloxx-redis"
-	REDISIMAGE       = "redis:latest"
-	PROCFSVOLUMENAME = "proc"
-	PROCFSMOUNTPATH  = "/hostproc"
-	SYSFSVOLUMENAME  = "sys"
-	SYSFSMOUNTPATH   = "/sys"
+	NAMESPACE              = "default"
+	DAEMONSETNAME          = "podloxx"
+	DAEMONSETIMAGE         = "ghcr.io/mogenius/podloxx-collector:" + version.Ver
+	REDISNAME              = "podloxx-redis"
+	REDISSERVICENAME       = "podloxx-redis-service"
+	REDISIMAGE             = "redis:latest"
+	REDISPORT        int32 = 6379
+	REDISTARGETPORT        = "redis"
+	PROCFSVOLUMENAME       = "proc"
+	PROCFSMOUNTPATH        = "/hostproc"
+	SYSFSVOLUMENAME        = "sys"
+	SYSFSMOUNTPATH         = "/sys"
 
 	SERVICEACCOUNTNAME     = "podloxx-service-account-app"
 	CLUSTERROLENAME        = "podloxx-cluster-role-app"

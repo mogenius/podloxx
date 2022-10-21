@@ -6,12 +6,13 @@ import (
 
 	"github.com/mogenius/mo-go/logger"
 
-	apiv1 "k8s.io/api/core/v1"
 	core "k8s.io/api/core/v1"
+	v1 "k8s.io/api/core/v1"
 	rbac "k8s.io/api/rbac/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/util/intstr"
 	applyconfapp "k8s.io/client-go/applyconfigurations/apps/v1"
 	applyconfcore "k8s.io/client-go/applyconfigurations/core/v1"
 	applyconfmeta "k8s.io/client-go/applyconfigurations/meta/v1"
@@ -25,6 +26,7 @@ func Deploy() {
 
 	addRbac(provider)
 	addRedis(provider)
+	addRedisService(provider)
 	addDaemonSet(provider)
 }
 
@@ -83,7 +85,7 @@ func addRbac(kubeProvider *KubeProvider) error {
 }
 
 func addDaemonSet(kubeProvider *KubeProvider) {
-	daemonSetClient := kubeProvider.ClientSet.AppsV1().DaemonSets(apiv1.NamespaceDefault)
+	daemonSetClient := kubeProvider.ClientSet.AppsV1().DaemonSets(NAMESPACE)
 
 	daemonsetContainer := applyconfcore.Container()
 	daemonsetContainer.WithName(DAEMONSETNAME)
@@ -177,13 +179,13 @@ func addDaemonSet(kubeProvider *KubeProvider) {
 	logger.Log.Info("Creating podloxx daemonset ...")
 	result, err := daemonSetClient.Apply(context.TODO(), daemonSet, applyOptions)
 	if err != nil {
-		panic(err)
+		logger.Log.Error(err)
 	}
 	logger.Log.Info("Created podloxx daemonset.", result.GetObjectMeta().GetName(), ".")
 }
 
 func addRedis(kubeProvider *KubeProvider) {
-	deploymentClient := kubeProvider.ClientSet.AppsV1().Deployments(apiv1.NamespaceDefault)
+	deploymentClient := kubeProvider.ClientSet.AppsV1().Deployments(NAMESPACE)
 
 	deploymentContainer := applyconfcore.Container()
 	deploymentContainer.WithName(REDISNAME)
@@ -203,6 +205,7 @@ func addRedis(kubeProvider *KubeProvider) {
 	}
 	agentResources := applyconfcore.ResourceRequirements().WithRequests(agentResourceRequests).WithLimits(agentResourceLimits)
 	deploymentContainer.WithResources(agentResources)
+	deploymentContainer.WithPorts(applyconfcore.ContainerPort().WithContainerPort(REDISPORT).WithProtocol(v1.ProtocolTCP))
 
 	podSpec := applyconfcore.PodSpec()
 	podSpec.WithTerminationGracePeriodSeconds(0)
@@ -231,7 +234,31 @@ func addRedis(kubeProvider *KubeProvider) {
 	logger.Log.Info("Creating podloxx redis ...")
 	result, err := deploymentClient.Apply(context.TODO(), deployment, applyOptions)
 	if err != nil {
-		panic(err)
+		logger.Log.Error(err)
 	}
 	logger.Log.Info("Created podloxx redis.", result.GetObjectMeta().GetName(), ".")
+}
+
+func addRedisService(kubeProvider *KubeProvider) {
+	serviceClient := kubeProvider.ClientSet.CoreV1().Services(NAMESPACE)
+
+	serviceSpec := applyconfcore.ServiceSpec()
+	serviceSpec.WithSelector(map[string]string{"app": REDISNAME})
+	serviceSpec.WithPorts(applyconfcore.ServicePort().WithPort(REDISPORT).WithTargetPort(intstr.FromString(REDISTARGETPORT)).WithProtocol(v1.ProtocolTCP))
+
+	applyOptions := metav1.ApplyOptions{
+		Force:        true,
+		FieldManager: REDISSERVICENAME,
+	}
+
+	service := applyconfcore.Service(REDISSERVICENAME, NAMESPACE)
+	service.WithSpec(serviceSpec)
+
+	// Create Redis Deployment
+	logger.Log.Info("Creating podloxx redis service ...")
+	result, err := serviceClient.Apply(context.TODO(), service, applyOptions)
+	if err != nil {
+		logger.Log.Error(err)
+	}
+	logger.Log.Info("Created podloxx redis service", result.GetObjectMeta().GetName(), ".")
 }
