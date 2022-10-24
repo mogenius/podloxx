@@ -29,8 +29,8 @@ import (
 )
 
 const (
-	DEFAULTSNAPLEN                     = 65536   // Max Size of TCP Packets
-	BYTES_CHANGE_SEND_TRESHHOLD uint64 = 1048576 // 1048576 wait until X bytes are gathered until we send an update to the API server
+	DEFAULTSNAPLEN                     = 65536 // Max Size of TCP Packets
+	BYTES_CHANGE_SEND_TRESHHOLD uint64 = 1024  // 1048576 wait until X bytes are gathered until we send an update to the API server
 )
 
 var TrafficData = make(map[string]*structs.InterfaceStats) // KEY: interfaceName e.g. veth1234abc
@@ -52,26 +52,17 @@ var APIPORT string
 var APIKEY string
 var INTERFACEPREFIX string
 
-var ReceiverChannel = make(chan structs.InterfaceStats)
-
 var redisClient *redis.Client
 
 func Init() {
 	APIHOST = os.Getenv("API_HOST")
 	APIPORT = os.Getenv("API_PORT")
 	INTERFACEPREFIX = os.Getenv("INTERFACE_PREFIX")
-
-	redisConnectionStr := fmt.Sprintf("%s:%s", os.Getenv("REDIS_SERVICE_NAME"), os.Getenv("REDIS_PORT"))
-	logger.Log.Infof("REDIS: Connecting to: %s", redisConnectionStr)
-
-	redisClient = redis.NewClient(&redis.Options{
-		Addr:     redisConnectionStr,
-		Password: "",
-		DB:       0,
-	})
 }
 
 func MonitorAll(useLocalKubeConfig bool, overwriteInterfacePrefix string) {
+	initRedis()
+
 	if overwriteInterfacePrefix != "" {
 		INTERFACEPREFIX = overwriteInterfacePrefix
 	}
@@ -99,21 +90,35 @@ func mainLoop() {
 	checkTaps()
 	loadContainerPids()
 	printEntriesTable()
+	reportData()
+}
+
+func initRedis() {
+	redisConnectionStr := fmt.Sprintf("%s:%s", os.Getenv("REDIS_SERVICE_NAME"), os.Getenv("REDIS_PORT"))
+	logger.Log.Infof("REDIS: Connecting to: %s", redisConnectionStr)
+
+	redisClient = redis.NewClient(&redis.Options{
+		Addr:     redisConnectionStr,
+		Password: "",
+		DB:       0,
+	})
+
+	// CHECK CONNECTION
+	_, err := redisClient.Ping().Result()
+	if err != nil {
+		logger.Log.Fatalf("Could not connect to redis! (%s)", err)
+		return
+	}
+	logger.Log.Info("REDIS: Connected successfully.")
 }
 
 func writeDataToRedis(data *structs.InterfaceStats) {
-	// dataBytes := new(bytes.Buffer)
-	// json.NewEncoder(dataBytes).Encode(data)
-
-	err := redisClient.Set(data.PodName, data, 0).Err()
+	key := strconv.Itoa(int(httpRequestCount))
+	err := redisClient.Set(key, data, 0).Err()
 	if err != nil {
 		logger.Log.Error(err)
 	}
-	val, err := redisClient.Get(data.PodName).Result()
-	if err != nil {
-		logger.Log.Error(err)
-	}
-	fmt.Println(val)
+	//fmt.Println(data)
 }
 
 func MonitorLocal() {
@@ -374,7 +379,6 @@ func reportData() {
 			// SEND DATA TO REDIS
 			writeDataToRedis(entry)
 
-			ReceiverChannel <- *entry
 			httpRequestCount++
 			lastTrafficDataBytesSum[id] = entry.TransmitBytes + entry.ReceivedBytes
 		}

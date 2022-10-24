@@ -27,8 +27,8 @@ func Deploy() {
 
 	applyNamespace(provider)
 	addRbac(provider)
-	addRedis(provider)
 	addRedisService(provider)
+	addRedis(provider)
 	addDaemonSet(provider)
 	time.Sleep(3 * time.Second) // TODO: <-- this is realy dumb. find a better solution
 	go StartPortForward(provider, false)
@@ -116,6 +116,10 @@ func addDaemonSet(kubeProvider *KubeProvider) {
 	daemonsetContainer.WithEnv(
 		applyconfcore.EnvVar().WithName("STAGE").WithValue(os.Getenv("STAGE")),
 		applyconfcore.EnvVar().WithName("INTERFACE_PREFIX").WithValue(os.Getenv("INTERFACE_PREFIX")),
+		applyconfcore.EnvVar().WithName("REDIS_SERVICE_NAME").WithValue(os.Getenv("REDIS_SERVICE_NAME")),
+		applyconfcore.EnvVar().WithName("REDIS_PORT").WithValue(os.Getenv("REDIS_PORT")),
+		applyconfcore.EnvVar().WithName("API_HOST").WithValue(os.Getenv("API_HOST")),
+		applyconfcore.EnvVar().WithName("API_PORT").WithValue(os.Getenv("API_PORT")),
 		applyconfcore.EnvVar().WithName("OWN_NODE_NAME").WithValueFrom(
 			applyconfcore.EnvVarSource().WithFieldRef(
 				applyconfcore.ObjectFieldSelector().WithAPIVersion("v1").WithFieldPath("spec.nodeName"),
@@ -227,7 +231,7 @@ func addRedis(kubeProvider *KubeProvider) {
 	}
 	agentResources := applyconfcore.ResourceRequirements().WithRequests(agentResourceRequests).WithLimits(agentResourceLimits)
 	deploymentContainer.WithResources(agentResources)
-	deploymentContainer.WithPorts(applyconfcore.ContainerPort().WithContainerPort(REDISPORT).WithProtocol(v1.ProtocolTCP))
+	deploymentContainer.WithPorts(applyconfcore.ContainerPort().WithContainerPort(REDISPORT).WithProtocol(v1.ProtocolTCP).WithName("redis"))
 
 	podSpec := applyconfcore.PodSpec()
 	podSpec.WithTerminationGracePeriodSeconds(0)

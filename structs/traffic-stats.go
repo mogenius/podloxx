@@ -1,6 +1,7 @@
 package structs
 
 import (
+	"encoding/json"
 	"os"
 	"strconv"
 	"strings"
@@ -35,6 +36,11 @@ type InterfaceConnection struct {
 	Ip1       string `json:"ip1"`
 	Ip2       string `json:"ip2"`
 	PacketSum uint64 `json:"packetSum"`
+}
+
+func (i InterfaceStats) MarshalBinary() (data []byte, err error) {
+	bytes, err := json.Marshal(i)
+	return bytes, err
 }
 
 func (is InterfaceStats) AddConnection(ip1 gopacket.Endpoint, ip2 gopacket.Endpoint) {

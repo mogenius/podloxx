@@ -6,12 +6,12 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"os"
-
 	"podloxx-collector/network"
+	"time"
 
+	"github.com/go-redis/redis"
 	"github.com/gorilla/websocket"
 	"github.com/mogenius/mo-go/logger"
 
@@ -24,7 +24,18 @@ var upGrader = websocket.Upgrader{
 	},
 }
 
+const REDISCONSTR = "127.0.0.1:6379"
+
+var redisClient *redis.Client
+
 func InitApi() {
+	for {
+		if initRedis() {
+			break
+		}
+		logger.Log.Infof("Waiting for redis to come alive: %s", REDISCONSTR)
+		time.Sleep(1 * time.Second)
+	}
 	go initGin()
 }
 
@@ -35,7 +46,6 @@ func InitApiCluster() {
 func initGin() {
 	router := gin.Default()
 	router.GET("/traffic", getTraffic)
-	router.GET("/traffic-ws", getTrafficWs)
 	router.StaticFile("/traffic-test", "./ui/test-ws.html")
 
 	srv := &http.Server{
@@ -48,19 +58,35 @@ func initGin() {
 	}
 }
 
-// func initRedisCon() {
-// 	redisConnectionStr := fmt.Sprintf("%s:%s", "127.0.0.1", "6379")
-// 	logger.Log.Infof("REDIS: Connecting to: %s", redisConnectionStr)
+func initRedis() bool {
+	redisClient = redis.NewClient(&redis.Options{
+		Addr:     REDISCONSTR,
+		Password: "",
+		DB:       0,
+	})
 
-// 	client := redis.NewClient(&redis.Options{
-// 		Addr:     redisConnectionStr,
-// 		Password: "",
-// 		DB:       0,
-// 	})
-// }
+	// CHECK CONNECTION
+	_, err := redisClient.Ping().Result()
+	if err != nil {
+		return false
+	}
+	logger.Log.Info("REDIS: Connected successfully.")
+	return true
+}
 
 func getTraffic(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, &network.TrafficData)
+
+	iter := redisClient.Scan(0, "prefix:*", 0).Iterator()
+	for iter.Next() {
+		fmt.Println("keys", iter.Val())
+		// data := structs.InterfaceStats{}
+		// json.Unmarshal([]byte(iter.Val()), &data)
+	}
+	if err := iter.Err(); err != nil {
+		panic(err)
+	}
+	fmt.Println("asdasd")
 }
 
 func printPrettyPost(c *gin.Context) {
@@ -72,23 +98,4 @@ func printPrettyPost(c *gin.Context) {
 	}
 
 	fmt.Println(string(out.Bytes()))
-}
-
-// webSocket returns json format
-func getTrafficWs(c *gin.Context) {
-	//Upgrade get request to webSocket protocol
-	ws, err := upGrader.Upgrade(c.Writer, c.Request, nil)
-	if err != nil {
-		log.Println("error get connection")
-		log.Fatal(err)
-	}
-	defer ws.Close()
-
-	for pkt := range network.ReceiverChannel {
-		err = ws.WriteJSON(&pkt)
-		if err != nil {
-			log.Println("error write json: " + err.Error())
-			return
-		}
-	}
 }

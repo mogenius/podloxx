@@ -35,64 +35,66 @@ type PortForwardAPodRequest struct {
 }
 
 func StartPortForward(kubeProvider *KubeProvider, useLocalKubeConfig bool) {
-	pod, err := getPodRedisPodname(kubeProvider, useLocalKubeConfig)
-	if err != nil {
-		logger.Log.Error(err)
-	}
-
-	logger.Log.Infof("Starting PortForward for %s ...", pod.Name)
-
-	var wg sync.WaitGroup
-	wg.Add(1)
-
-	// stopCh control the port forwarding lifecycle. When it gets closed the
-	// port forward will terminate
-	stopCh := make(chan struct{}, 1)
-	// readyCh communicate when the port forward is ready to get traffic
-	readyCh := make(chan struct{})
-	// stream is used to tell the port forwarder where to place its output or
-	// where to expect input if needed. For the port forwarding we just need
-	// the output eventually
-	stream := genericclioptions.IOStreams{
-		In:     os.Stdin,
-		Out:    os.Stdout,
-		ErrOut: os.Stderr,
-	}
-
-	// managing termination signal from the terminal. As you can see the stopCh
-	// gets closed to gracefully handle its termination.
-	sigs := make(chan os.Signal, 1)
-	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
-	go func() {
-		<-sigs
-		fmt.Println("Bye...")
-		close(stopCh)
-		wg.Done()
-	}()
-
-	go func() {
-		// PortForward the pod specified from its port 9090 to the local port
-		// 8080
-		err := portForwardAPod(kubeProvider, useLocalKubeConfig, PortForwardAPodRequest{
-			Pod:       *pod,
-			LocalPort: int(REDISPORT),
-			PodPort:   int(REDISPORT),
-			Streams:   stream,
-			StopCh:    stopCh,
-			ReadyCh:   readyCh,
-		})
+	for {
+		pod, err := getPodRedisPodname(kubeProvider, useLocalKubeConfig)
 		if err != nil {
-			panic(err)
+			logger.Log.Error(err)
 		}
-	}()
 
-	select {
-	case <-readyCh:
-		break
+		logger.Log.Infof("Starting PortForward for %s ...", pod.Name)
+
+		var wg sync.WaitGroup
+		wg.Add(1)
+
+		// stopCh control the port forwarding lifecycle. When it gets closed the
+		// port forward will terminate
+		stopCh := make(chan struct{}, 1)
+		// readyCh communicate when the port forward is ready to get traffic
+		readyCh := make(chan struct{})
+		// stream is used to tell the port forwarder where to place its output or
+		// where to expect input if needed. For the port forwarding we just need
+		// the output eventually
+		stream := genericclioptions.IOStreams{
+			In:     os.Stdin,
+			Out:    os.Stdout,
+			ErrOut: os.Stderr,
+		}
+
+		// managing termination signal from the terminal. As you can see the stopCh
+		// gets closed to gracefully handle its termination.
+		sigs := make(chan os.Signal, 1)
+		signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+		go func() {
+			<-sigs
+			fmt.Println("Bye...")
+			close(stopCh)
+			wg.Done()
+		}()
+
+		go func() {
+			// PortForward the pod specified from its port 9090 to the local port
+			// 8080
+			err := portForwardAPod(kubeProvider, useLocalKubeConfig, PortForwardAPodRequest{
+				Pod:       *pod,
+				LocalPort: int(REDISPORT),
+				PodPort:   int(REDISPORT),
+				Streams:   stream,
+				StopCh:    stopCh,
+				ReadyCh:   readyCh,
+			})
+			if err != nil {
+				panic(err)
+			}
+		}()
+
+		select {
+		case <-readyCh:
+			break
+		}
+		println("Port forwarding is ready to get traffic. have fun!")
+
+		wg.Wait()
 	}
-	println("Port forwarding is ready to get traffic. have fun!")
-
-	wg.Wait()
 }
 
 func portForwardAPod(kubeProvider *KubeProvider, useLocalKubeConfig bool, req PortForwardAPodRequest) error {

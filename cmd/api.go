@@ -4,8 +4,12 @@ Copyright © 2022 mogenius, Benedikt Iltisberger
 package cmd
 
 import (
+	"os"
+	"os/signal"
 	"podloxx-collector/api"
+	"syscall"
 
+	"github.com/mogenius/mo-go/logger"
 	"github.com/mogenius/mo-go/utils"
 	"github.com/spf13/cobra"
 )
@@ -18,8 +22,13 @@ var apiCmd = &cobra.Command{
 	In API mode you can use all gathered data from the websocket api and REST api.
 	`,
 	Run: func(cmd *cobra.Command, args []string) {
-		utils.OpenBrowser("http://127.0.0.1:8080/traffic")
+		utils.OpenBrowser("http://127.0.0.1:1337/traffic")
 		api.InitApi()
+
+		quit := make(chan os.Signal)
+		signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+		<-quit
+		logger.Log.Info("CLEANUP finished successfully.")
 	},
 }
 
