@@ -17,7 +17,7 @@ func Remove() {
 	removeDaemonset(provider)
 	removeRbac(provider)
 	removeRedis(provider)
-	//removeRedisService(provider)
+	removeRedisService(provider)
 }
 
 func removeDaemonset(kubeProvider *KubeProvider) {

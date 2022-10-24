@@ -28,7 +28,7 @@ func Deploy() {
 	applyNamespace(provider)
 	addRbac(provider)
 	addRedis(provider)
-	//addRedisService(provider)
+	addRedisService(provider)
 	addDaemonSet(provider)
 	time.Sleep(3 * time.Second) // TODO: <-- this is realy dumb. find a better solution
 	go StartPortForward(provider, false)

@@ -19,7 +19,7 @@ var clusterCmd = &cobra.Command{
 	Awesome hacker view window. Should always be visible to impress non-it-folks.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		go network.MonitorAll(false, "")
-		api.InitApi()
+		api.InitApiCluster()
 	},
 }
 

@@ -12,7 +12,6 @@ import (
 
 	"podloxx-collector/network"
 
-	"github.com/go-redis/redis"
 	"github.com/gorilla/websocket"
 	"github.com/mogenius/mo-go/logger"
 
@@ -27,7 +26,10 @@ var upGrader = websocket.Upgrader{
 
 func InitApi() {
 	go initGin()
-	go initRedisCon()
+}
+
+func InitApiCluster() {
+	initGin()
 }
 
 func initGin() {
@@ -46,19 +48,16 @@ func initGin() {
 	}
 }
 
-func initRedisCon() {
-	client := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "",
-		DB:       0,
-	})
+// func initRedisCon() {
+// 	redisConnectionStr := fmt.Sprintf("%s:%s", "127.0.0.1", "6379")
+// 	logger.Log.Infof("REDIS: Connecting to: %s", redisConnectionStr)
 
-	pong, err := client.Ping().Result()
-	if err != nil {
-		logger.Log.Error(err)
-	}
-	fmt.Println(pong)
-}
+// 	client := redis.NewClient(&redis.Options{
+// 		Addr:     redisConnectionStr,
+// 		Password: "",
+// 		DB:       0,
+// 	})
+// }
 
 func getTraffic(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, &network.TrafficData)

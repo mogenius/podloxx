@@ -49,6 +49,7 @@ RUN apk add --no-cache \
 WORKDIR /app
 
 COPY --from=builder ["/app/bin/podloxx", "."]
+COPY --from=builder ["/app/.env", "/app/.env"]
 
 ENV GIN_MODE=release
 

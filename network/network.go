@@ -14,6 +14,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/go-redis/redis"
 	"github.com/mogenius/mo-go/logger"
 	"github.com/mogenius/mo-go/utils"
 	"golang.org/x/exp/maps"
@@ -53,10 +54,21 @@ var INTERFACEPREFIX string
 
 var ReceiverChannel = make(chan structs.InterfaceStats)
 
+var redisClient *redis.Client
+
 func Init() {
 	APIHOST = os.Getenv("API_HOST")
 	APIPORT = os.Getenv("API_PORT")
 	INTERFACEPREFIX = os.Getenv("INTERFACE_PREFIX")
+
+	redisConnectionStr := fmt.Sprintf("%s:%s", os.Getenv("REDIS_SERVICE_NAME"), os.Getenv("REDIS_PORT"))
+	logger.Log.Infof("REDIS: Connecting to: %s", redisConnectionStr)
+
+	redisClient = redis.NewClient(&redis.Options{
+		Addr:     redisConnectionStr,
+		Password: "",
+		DB:       0,
+	})
 }
 
 func MonitorAll(useLocalKubeConfig bool, overwriteInterfacePrefix string) {
@@ -87,6 +99,21 @@ func mainLoop() {
 	checkTaps()
 	loadContainerPids()
 	printEntriesTable()
+}
+
+func writeDataToRedis(data *structs.InterfaceStats) {
+	// dataBytes := new(bytes.Buffer)
+	// json.NewEncoder(dataBytes).Encode(data)
+
+	err := redisClient.Set(data.PodName, data, 0).Err()
+	if err != nil {
+		logger.Log.Error(err)
+	}
+	val, err := redisClient.Get(data.PodName).Result()
+	if err != nil {
+		logger.Log.Error(err)
+	}
+	fmt.Println(val)
 }
 
 func MonitorLocal() {
@@ -344,9 +371,9 @@ func reportData() {
 	for id, entry := range TrafficData {
 		lastPacketSum, exists := lastTrafficDataBytesSum[id]
 		if exists == false || (entry.TransmitBytes+entry.ReceivedBytes) >= lastPacketSum+BYTES_CHANGE_SEND_TRESHHOLD {
-			// SEND DATA TO API
-			// dataBytes := new(bytes.Buffer)
-			// json.NewEncoder(dataBytes).Encode(entry)
+			// SEND DATA TO REDIS
+			writeDataToRedis(entry)
+
 			ReceiverChannel <- *entry
 			httpRequestCount++
 			lastTrafficDataBytesSum[id] = entry.TransmitBytes + entry.ReceivedBytes
