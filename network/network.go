@@ -34,7 +34,6 @@ const (
 )
 
 var TrafficData = make(map[string]*structs.InterfaceStats) // KEY: interfaceName e.g. veth1234abc
-var lastTrafficDataBytesSum = make(map[string]uint64)      // KEY: interfaceName e.g. veth1234abc
 var containerIds = make(map[string]v1.Pod)                 // KEY: containerId e.g. dad2f775d748b7fabdf333279219962a68af4f8bbf0e11933614bcba1d018de6
 var containerPids = make(map[uint32]v1.Pod)                // KEY: HostProcessId e.g. 27123
 var handles = make(map[string]*pcap.Handle)                // KEY: interfaceName e.g. veth1234abc
@@ -305,7 +304,6 @@ func stopMonitoring(podname string) {
 			mutex.Lock()
 			delete(TrafficData, interfaceName)
 			delete(containerIds, entry.ContainerId)
-			delete(lastTrafficDataBytesSum, interfaceName)
 			handle, isOk := handles[interfaceName]
 			if isOk {
 				handle.Close()
@@ -373,15 +371,10 @@ func printEntriesTable() {
 
 // Report Data to API server
 func reportData() {
-	for id, entry := range TrafficData {
-		lastPacketSum, exists := lastTrafficDataBytesSum[id]
-		if exists == false || (entry.TransmitBytes+entry.ReceivedBytes) >= lastPacketSum+BYTES_CHANGE_SEND_TRESHHOLD {
-			// SEND DATA TO REDIS
-			writeDataToRedis(entry)
-
-			httpRequestCount++
-			lastTrafficDataBytesSum[id] = entry.TransmitBytes + entry.ReceivedBytes
-		}
+	for _, entry := range TrafficData {
+		// SEND DATA TO REDIS
+		writeDataToRedis(entry)
+		httpRequestCount++
 	}
 }
 

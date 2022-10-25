@@ -83,6 +83,7 @@ func StartPortForward(kubeProvider *KubeProvider, useLocalKubeConfig bool) {
 				ReadyCh:   readyCh,
 			})
 			if err != nil {
+				logger.Log.Warning("ERROR DURING PORTFORWARD!")
 				panic(err)
 			}
 		}()
@@ -94,6 +95,8 @@ func StartPortForward(kubeProvider *KubeProvider, useLocalKubeConfig bool) {
 		println("Port forwarding is ready to get traffic. have fun!")
 
 		wg.Wait()
+
+		logger.Log.Warning("TUNNEL CLOSED!")
 	}
 }
 

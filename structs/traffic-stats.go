@@ -2,6 +2,8 @@ package structs
 
 import (
 	"encoding/json"
+	"fmt"
+	"log"
 	"os"
 	"strconv"
 	"strings"
@@ -41,6 +43,14 @@ type InterfaceConnection struct {
 func (i InterfaceStats) MarshalBinary() (data []byte, err error) {
 	bytes, err := json.Marshal(i)
 	return bytes, err
+}
+
+func PrettyPrint(i interface{}) {
+	iJson, err := json.MarshalIndent(i, "", "  ")
+	if err != nil {
+		log.Fatalf(err.Error())
+	}
+	fmt.Printf("%s\n", string(iJson))
 }
 
 func (is InterfaceStats) AddConnection(ip1 gopacket.Endpoint, ip2 gopacket.Endpoint) {

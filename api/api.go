@@ -8,7 +8,7 @@ import (
 	"io"
 	"net/http"
 	"os"
-	"podloxx-collector/network"
+	"podloxx-collector/structs"
 	"time"
 
 	"github.com/go-redis/redis"
@@ -17,6 +17,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 )
+
+const MAXPOLL int64 = 100
 
 var upGrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool {
@@ -27,6 +29,18 @@ var upGrader = websocket.Upgrader{
 const REDISCONSTR = "127.0.0.1:6379"
 
 var redisClient *redis.Client
+
+func TestRedis() {
+	for {
+		if initRedis() {
+			break
+		}
+		logger.Log.Infof("Waiting for redis to come alive: %s", REDISCONSTR)
+		time.Sleep(1 * time.Second)
+	}
+	data := getRedisData()
+	logger.Log.Infof("Received: %d", len(data))
+}
 
 func InitApi() {
 	for {
@@ -75,18 +89,43 @@ func initRedis() bool {
 }
 
 func getTraffic(c *gin.Context) {
-	c.IndentedJSON(http.StatusOK, &network.TrafficData)
+	data := getRedisData()
+	logger.Log.Infof("Received: %d", len(data))
+	c.IndentedJSON(http.StatusOK, &data)
+	getRedisData()
+}
 
-	iter := redisClient.Scan(0, "prefix:*", 0).Iterator()
-	for iter.Next() {
-		fmt.Println("keys", iter.Val())
-		// data := structs.InterfaceStats{}
-		// json.Unmarshal([]byte(iter.Val()), &data)
-	}
-	if err := iter.Err(); err != nil {
+func getRedisData() []structs.InterfaceStats {
+	var result []structs.InterfaceStats = make([]structs.InterfaceStats, 0)
+
+	var cursor uint64
+	var keys []string
+	var err error
+	keys, cursor, err = redisClient.Scan(cursor, "*", MAXPOLL).Result()
+	if err != nil {
 		panic(err)
 	}
-	fmt.Println("asdasd")
+
+	// get data
+	values, errGet := redisClient.MGet(keys...).Result()
+	if errGet != nil {
+		logger.Log.Infof("Error receiving key %s: %s", keys, errGet)
+	}
+
+	// serialize data
+	for _, value := range values {
+		data := structs.InterfaceStats{}
+		errUnm := json.Unmarshal([]byte(value.(string)), &data)
+		if errUnm != nil {
+			logger.Log.Error(errUnm)
+		}
+		result = append(result, data)
+	}
+
+	// delete processed data
+	redisClient.Del(keys...)
+
+	return result
 }
 
 func printPrettyPost(c *gin.Context) {
