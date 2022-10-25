@@ -25,7 +25,7 @@ var startCmd = &cobra.Command{
 	App will cleanup after being terminated with CTRL+C automatically.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		kubernetes.Deploy()
-		utils.OpenBrowser(fmt.Sprintf("http://%s:%s/traffic", os.Getenv("API_HOST"), os.Getenv("API_PORT")))
+		utils.OpenBrowser(fmt.Sprintf("http://%s:%s/podloxx", os.Getenv("API_HOST"), os.Getenv("API_PORT")))
 		api.InitApi()
 
 		quit := make(chan os.Signal)

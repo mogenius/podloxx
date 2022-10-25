@@ -1,29 +1,55 @@
-# build stage
-FROM node:lts-alpine as build-stage
+FROM golang:1.19-alpine AS builder
 
-WORKDIR /app/ui
-COPY ui/package*.json ./
-RUN npm install
-COPY ui/. .
-RUN npm run build
+ENV CGO_ENABLED=1 GOOS=linux
 
-WORKDIR /app/backend
-COPY backend/package*.json ./
-RUN npm install
-COPY backend/. .
-RUN npm run build --production
+RUN apk add --no-cache \
+    libpcap-dev \
+    g++ \
+    perl-utils \
+    curl \
+    build-base \
+    binutils-gold \
+    bash \
+    clang \
+    llvm \
+    libbpf-dev \
+    linux-headers
 
-# production stage
-FROM nginx as production-stage
-RUN apt-get update
-RUN apt-get install -y nodejs
-COPY --from=build-stage /app/ui/dist/podloxx /usr/share/nginx/html
-COPY --from=build-stage /app/backend /app
-COPY start.sh /app/
-EXPOSE 8080
-EXPOSE 4200
-ENV NODE_ENV=production
-ENV PORT=4200
-ENV NGINX_PORT=8080
+ARG COMMIT_HASH=NOT_SET
+ARG GIT_BRANCH=NOT_SET
+ARG BUILD_TIMESTAMP=NOT_SET
+ARG NEXT_VERSION=NOT_SET
+ARG GITUSER
+ARG GITPAT
 
-ENTRYPOINT ["/app/start.sh"]
+RUN go env -w GOPRIVATE=github.com/mogenius
+RUN apk add git
+RUN git config --global url."https://$GITUSER:$GITPAT@github.com".insteadOf "https://github.com"
+
+
+WORKDIR /app
+
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY . .
+
+RUN CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -ldflags="-extldflags= \
+  -X 'podloxx-collector/version.GitCommitHash=${COMMIT_HASH}' \
+  -X 'podloxx-collector/version.Branch=${GIT_BRANCH}' \
+  -X 'podloxx-collector/version.BuildTimestamp=${BUILD_TIMESTAMP}' \
+  -X 'podloxx-collector/version.Ver=${NEXT_VERSION}'" -o bin/podloxx .
+
+
+FROM alpine:latest
+RUN apk add --no-cache \
+    libpcap-dev bash
+
+WORKDIR /app
+
+COPY --from=builder ["/app/bin/podloxx", "."]
+COPY --from=builder ["/app/.env", "/app/.env"]
+
+ENV GIN_MODE=release
+
+ENTRYPOINT [ "/app/podloxx", "cluster" ]

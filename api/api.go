@@ -59,8 +59,8 @@ func InitApiCluster() {
 
 func initGin() {
 	router := gin.Default()
+	router.Static("/podloxx", os.Getenv("PODLOXX_DIST"))
 	router.GET("/traffic", getTraffic)
-	router.StaticFile("/traffic-test", "./ui/test-ws.html")
 
 	srv := &http.Server{
 		Addr:    fmt.Sprintf(":%s", os.Getenv("API_PORT")),

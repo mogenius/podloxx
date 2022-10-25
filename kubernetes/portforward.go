@@ -4,6 +4,7 @@
 package kubernetes
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"net/http"
@@ -13,11 +14,11 @@ import (
 	"strings"
 	"sync"
 	"syscall"
+	"time"
 
 	"github.com/mogenius/mo-go/logger"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/cli-runtime/pkg/genericclioptions"
 	"k8s.io/client-go/tools/portforward"
 	"k8s.io/client-go/transport/spdy"
 )
@@ -26,8 +27,8 @@ type PortForwardAPodRequest struct {
 	Pod       v1.Pod
 	LocalPort int
 	PodPort   int
-	// Steams configures where to write or read input from
-	Streams genericclioptions.IOStreams
+	Out       *bytes.Buffer
+	ErrOut    *bytes.Buffer
 	// StopCh is the channel used to manage the port forward lifecycle
 	StopCh <-chan struct{}
 	// ReadyCh communicates when the tunnel is ready to receive traffic
@@ -54,11 +55,7 @@ func StartPortForward(kubeProvider *KubeProvider, useLocalKubeConfig bool) {
 		// stream is used to tell the port forwarder where to place its output or
 		// where to expect input if needed. For the port forwarding we just need
 		// the output eventually
-		stream := genericclioptions.IOStreams{
-			In:     os.Stdin,
-			Out:    os.Stdout,
-			ErrOut: os.Stderr,
-		}
+		out, errOut := new(bytes.Buffer), new(bytes.Buffer)
 
 		// managing termination signal from the terminal. As you can see the stopCh
 		// gets closed to gracefully handle its termination.
@@ -78,7 +75,8 @@ func StartPortForward(kubeProvider *KubeProvider, useLocalKubeConfig bool) {
 				Pod:       *pod,
 				LocalPort: int(REDISPORT),
 				PodPort:   int(REDISPORT),
-				Streams:   stream,
+				Out:       out,
+				ErrOut:    errOut,
 				StopCh:    stopCh,
 				ReadyCh:   readyCh,
 			})
@@ -92,11 +90,11 @@ func StartPortForward(kubeProvider *KubeProvider, useLocalKubeConfig bool) {
 		case <-readyCh:
 			break
 		}
-		println("Port forwarding is ready to get traffic. have fun!")
 
 		wg.Wait()
 
 		logger.Log.Warning("TUNNEL CLOSED!")
+		time.Sleep(1 * time.Second) // wait a sec before retrying
 	}
 }
 
@@ -106,12 +104,14 @@ func portForwardAPod(kubeProvider *KubeProvider, useLocalKubeConfig bool, req Po
 
 	transport, upgrader, err := spdy.RoundTripperFor(&kubeProvider.ClientConfig)
 	if err != nil {
+		logger.Log.Error(err)
 		return err
 	}
 
 	dialer := spdy.NewDialer(upgrader, &http.Client{Transport: transport}, http.MethodPost, &url.URL{Scheme: "https", Path: path, Host: hostIP})
-	fw, err := portforward.New(dialer, []string{fmt.Sprintf("%d:%d", req.LocalPort, req.PodPort)}, req.StopCh, req.ReadyCh, req.Streams.Out, req.Streams.ErrOut)
+	fw, err := portforward.New(dialer, []string{fmt.Sprintf("%d:%d", req.LocalPort, req.PodPort)}, req.StopCh, req.ReadyCh, req.Out, req.ErrOut)
 	if err != nil {
+		logger.Log.Error(err)
 		return err
 	}
 	return fw.ForwardPorts()

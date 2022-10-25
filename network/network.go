@@ -68,7 +68,7 @@ func MonitorAll(useLocalKubeConfig bool, overwriteInterfacePrefix string) {
 
 	ingressIps = kubernetes.GetIngressControllerIps(false)
 
-	go mainLoopAndWait(30)
+	go mainLoopAndWait(10)
 
 	for {
 		podWatch(&eventCount)
