@@ -21,7 +21,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'doc',
+    redirectTo: '',
     pathMatch: 'full'
   }
 ];

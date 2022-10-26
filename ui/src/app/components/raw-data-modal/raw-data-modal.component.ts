@@ -20,11 +20,7 @@ export class RawDataModalComponent implements OnInit {
 
   private _data: string;
 
-  ngOnInit(): void {
-    this._statsService.cAdvisorRawData().subscribe((data) => {
-      this._data = data;
-    });
-  }
+  ngOnInit(): void {}
 
   public toggleRaw(): void {
     this.close.emit(true);

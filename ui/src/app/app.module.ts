@@ -15,6 +15,7 @@ import { TableListItemComponent } from './components/table-list/table-list-item/
 import { formatBytes } from './pipes/formatBytes';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RawDataModalComponent } from './components/raw-data-modal/raw-data-modal.component';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,7 @@ import { RawDataModalComponent } from './components/raw-data-modal/raw-data-moda
     RawDataModalComponent
   ],
   imports: [FormsModule, HttpClientModule, BrowserModule, AppRoutingModule, NgChartsModule, NgbModule],
-  providers: [],
+  providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy }],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

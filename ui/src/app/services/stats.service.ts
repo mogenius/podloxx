@@ -31,19 +31,6 @@ export class StatsService {
       );
   }
 
-  public cAdvisorRawData(): Observable<any> {
-    const url = this.cleanUpUrl(
-      `${environment.cAdvisorService.baseUrl}/${environment.cAdvisorService.cAdvisorRawData.endPoint}`
-    );
-
-    return this._http.request(environment.cAdvisorService.cAdvisorRawData.method ?? 'GET', url, {
-      headers: {
-        'Content-Type': environment.cAdvisorService.cAdvisorRawData.header.contentType
-      },
-      responseType: 'text'
-    });
-  }
-
   private cleanUpUrl(str: string): string {
     return str.replace(/([^:]\/)\/+/g, '$1');
   }

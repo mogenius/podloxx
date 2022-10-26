@@ -1,4 +1,10 @@
 tmp
 bin
 
+build-push-ghcr.sh
+
 .DS_Store
+
+franky-info.txt
+
+env/local.env
