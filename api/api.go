@@ -2,12 +2,15 @@ package api
 
 import (
 	"bytes"
+	"embed"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
+	"io/fs"
 	"net/http"
 	"os"
+	"path"
 	"podloxx-collector/structs"
 	"time"
 
@@ -19,6 +22,8 @@ import (
 )
 
 const MAXPOLL int64 = 100
+
+var HtmlDirFs embed.FS
 
 var upGrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool {
@@ -59,7 +64,8 @@ func InitApiCluster() {
 
 func initGin() {
 	router := gin.Default()
-	router.Static("/podloxx", os.Getenv("PODLOXX_DIST"))
+	router.StaticFS("/podloxx", embedFs())
+	//router.Static("/podloxx", os.Getenv("PODLOXX_DIST"))
 	router.GET("/traffic", getTraffic)
 
 	srv := &http.Server{
@@ -90,9 +96,7 @@ func initRedis() bool {
 
 func getTraffic(c *gin.Context) {
 	data := getRedisData()
-	logger.Log.Infof("Received: %d", len(data))
 	c.IndentedJSON(http.StatusOK, &data)
-	getRedisData()
 }
 
 func getRedisData() []structs.InterfaceStats {
@@ -104,6 +108,11 @@ func getRedisData() []structs.InterfaceStats {
 	keys, cursor, err = redisClient.Scan(cursor, "*", MAXPOLL).Result()
 	if err != nil {
 		panic(err)
+	}
+
+	// return if no new data can be gathered
+	if len(keys) == 0 {
+		return result
 	}
 
 	// get data
@@ -128,6 +137,22 @@ func getRedisData() []structs.InterfaceStats {
 	return result
 }
 
+func embedFs() http.FileSystem {
+	sub, err := fs.Sub(HtmlDirFs, "ui/dist/podloxx")
+
+	dirContent, err := getAllFilenames(&HtmlDirFs, "")
+	if err != nil {
+		panic(err)
+	}
+
+	if len(dirContent) <= 0 {
+		panic("dist folder empty. Cannnot serve site. FATAL.")
+	} else {
+		logger.Log.Noticef("Loaded %d static files from embed.", len(dirContent))
+	}
+	return http.FS(sub)
+}
+
 func printPrettyPost(c *gin.Context) {
 	var out bytes.Buffer
 	body, _ := io.ReadAll(c.Request.Body)
@@ -137,4 +162,33 @@ func printPrettyPost(c *gin.Context) {
 	}
 
 	fmt.Println(string(out.Bytes()))
+}
+
+func getAllFilenames(fs *embed.FS, dir string) (out []string, err error) {
+	if len(dir) == 0 {
+		dir = "."
+	}
+
+	entries, err := fs.ReadDir(dir)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, entry := range entries {
+		fp := path.Join(dir, entry.Name())
+		if entry.IsDir() {
+			res, err := getAllFilenames(fs, fp)
+			if err != nil {
+				return nil, err
+			}
+
+			out = append(out, res...)
+
+			continue
+		}
+
+		out = append(out, fp)
+	}
+
+	return
 }

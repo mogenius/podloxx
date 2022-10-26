@@ -1,0 +1,11 @@
+version: '3'
+services:
+  test-service:
+    image: test/image
+    build:
+      context: .
+      dockerfile: Dockerfile-Build
+    container_name: test
+    volumes:
+      - ./export:/app/export
+      - ./build:/app/build
