@@ -21,12 +21,38 @@
     </a>
 </p>
 
+# TOC
+- What is podloxx?
+- Installation
+- How does it work? What does it do?
+- API
+- Known Issues
+- 
+- Thanks
+
+## What is podloxx?
+XXX
+
+## Installation
+Just download it and run it. Don't forget to set the right cluster using kubectx or whatever tool you prefer.
+
+### Download
+```
 curl -Lo podloxx \
 https://github.com/mogenius/podlox/releases/download/s/podloxx-1.0.2-darwin-arm64 \
 && chmod 755 podloxx
 
 podloxx start
+```
 
+## How does it work? What does it do?
+XXX Explain architecture
 
+## API
+XXX 
 
-#
+## Known Issues
+XXX
+
+## Thanks 
+We took great inspiration (and some lines of code) from [Mizu](https://github.com/up9inc/mizu). Awesome work from the folks at [UP9](https://up9.com/).
