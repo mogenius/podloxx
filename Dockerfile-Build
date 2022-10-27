@@ -1,6 +1,8 @@
 FROM golang:1.19-alpine AS builder
 
-ENV CGO_ENABLED=1 GOOS=linux
+ARG TARGETOS TARGETARCH
+
+ENV CGO_ENABLED=1
 
 RUN apk add --no-cache \
     libpcap-dev \
@@ -13,40 +15,28 @@ RUN apk add --no-cache \
     clang \
     llvm \
     libbpf-dev \
-    linux-headers
+    linux-headers \
+    git
 
-ARG COMMIT_HASH=NOT_SET
-ARG GIT_BRANCH=NOT_SET
-ARG BUILD_TIMESTAMP=NOT_SET
-ARG NEXT_VERSION=NOT_SET
 ARG GITUSER
 ARG GITPAT
+ARG GITAPITOKEN
+ARG VERSION
 
 RUN go env -w GOPRIVATE=github.com/mogenius
-RUN apk add git
 RUN git config --global url."https://$GITUSER:$GITPAT@github.com".insteadOf "https://github.com"
 
-
-ADD bin /build
 WORKDIR /app
-
-COPY go.mod go.sum ./
-RUN go mod download
 
 COPY . .
 
-RUN CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -ldflags="-extldflags= \
-  -X 'podloxx-collector/version.GitCommitHash=${COMMIT_HASH}' \
-  -X 'podloxx-collector/version.Branch=${GIT_BRANCH}' \
-  -X 'podloxx-collector/version.BuildTimestamp=${BUILD_TIMESTAMP}' \
-  -X 'podloxx-collector/version.Ver=${NEXT_VERSION}'" -o /build/podloxx .
+RUN ./build-client.sh NEXT_VERSION=$VERSION GOOS=darwin GOARCH=amd64 github_api_token=$GITAPITOKEN
+RUN ./build-client.sh NEXT_VERSION=$VERSION GOOS=darwin GOARCH=arm64 github_api_token=$GITAPITOKEN
 
-# GOOS=darwin GOARCH=amd64 
-# GOOS=darwin GOARCH=arm64 
+RUN ./build-client.sh NEXT_VERSION=$VERSION GOOS=linux GOARCH=386 github_api_token=$GITAPITOKEN
+RUN ./build-client.sh NEXT_VERSION=$VERSION GOOS=linux GOARCH=arm64 github_api_token=$GITAPITOKEN
+RUN ./build-client.sh NEXT_VERSION=$VERSION GOOS=linux GOARCH=amd64 github_api_token=$GITAPITOKEN
 
-# GOOS=linux GOARCH=386 
-# GOOS=linux GOARCH=amd64 
-# GOOS=linux GOARCH=arm64
 
-# GOOS=windows GOARCH=amd64 
-# GOOS=windows GOARCH=arm64 
+RUN ./build-client.sh NEXT_VERSION=$VERSION GOOS=windows GOARCH=arm64 github_api_token=$GITAPITOKEN
+RUN ./build-client.sh NEXT_VERSION=$VERSION GOOS=windows GOARCH=amd64 github_api_token=$GITAPITOKEN

@@ -1,28 +1,11 @@
 # Thanks to Stefan Buck. We took some code from his snipped: 
 # License: MIT https://gist.github.com/stefanbuck/ce788fee19ab6eb0b4447a85fc99f447 Author: Stefan Buck
+#
+# Example ./build-client.sh NEXT_VERSION=1.0.1 GOOS=darwin GOARCH=amd64 github_api_token=XXX
+#
 
 #!/bin/bash
-set -xe
-
-owner=mogenius
-repo=podloxx
-GIT_BRANCH=$(git branch | grep \* | cut -d ' ' -f2 | tr '[:upper:]' '[:lower:]')
-NEXT_VERSION=1.0.6
-COMMIT_HASH=$(git rev-parse --short HEAD)
-GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-BUILD_TIMESTAMP=$(date)
-CGO_ENABLED=1
-tag="v$NEXT_VERSION"
-GOOS=darwin
-GOARCH=amd64
-filename="bin/podloxx-${NEXT_VERSION}-$GOOS-$GOARCH"
-# github_api_token= <-- this will be injected during build using an ARG + mogenius key vault env var
-
-go build -ldflags="-extldflags= \
-  -X 'podloxx-collector/version.GitCommitHash=${COMMIT_HASH}' \
-  -X 'podloxx-collector/version.Branch=${GIT_BRANCH}' \
-  -X 'podloxx-collector/version.BuildTimestamp=${BUILD_TIMESTAMP}' \
-  -X 'podloxx-collector/version.Ver=${NEXT_VERSION}'" -o $filename .
+set -ex
 
 xargs=$(which gxargs || which xargs)
 
@@ -34,6 +17,43 @@ CONFIG=$@
 for line in $CONFIG; do
   eval "$line"
 done
+
+echo $NEXT_VERSION
+
+if [[ -z "${NEXT_VERSION}" ]]; then
+  echo "NEXT_VERSION is undefined."; exit 0
+fi
+
+if [[ -z "${GOOS}" ]]; then
+  echo "GOOS is undefined."; exit 0
+fi
+
+if [[ -z "${GOARCH}" ]]; then
+  echo "GOARCH is undefined."; exit 0
+fi
+
+if [[ -z "${github_api_token}" ]]; then
+  echo "github_api_token is undefined."; exit 0
+fi
+
+owner=mogenius
+repo=podloxx
+GIT_BRANCH=$(git branch | grep \* | cut -d ' ' -f2 | tr '[:upper:]' '[:lower:]')
+COMMIT_HASH=$(git rev-parse --short HEAD)
+GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+BUILD_TIMESTAMP=$(date)
+CGO_ENABLED=1
+tag="v$NEXT_VERSION"
+filename="bin/podloxx-${NEXT_VERSION}-$GOOS-$GOARCH"
+
+go mod download
+
+go build -ldflags="-extldflags= \
+  -s -w \
+  -X 'podloxx-collector/version.GitCommitHash=${COMMIT_HASH}' \
+  -X 'podloxx-collector/version.Branch=${GIT_BRANCH}' \
+  -X 'podloxx-collector/version.BuildTimestamp=${BUILD_TIMESTAMP}' \
+  -X 'podloxx-collector/version.Ver=${NEXT_VERSION}'" -o $filename .
 
 # Define variables.
 GH_API="https://api.github.com"
