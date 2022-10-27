@@ -27,7 +27,7 @@ export const baseEnvironment: IEnvironment = {
   baseUrl: 'http://localhost:1337',
   statsService: {
     method: RequestMethodEnum.GET,
-    endPoint: '/service/network-stats',
+    endPoint: '/traffic',
     header: {
       // authorization: OVER AUTH INTERCEPTOR,
       contentType: 'application/json'
