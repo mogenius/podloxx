@@ -1,3 +1,6 @@
+# Thanks to Stefan Buck. We took some code from his snipped: 
+# License: MIT https://gist.github.com/stefanbuck/ce788fee19ab6eb0b4447a85fc99f447 Author: Stefan Buck
+
 #!/bin/bash
 set -xe
 
@@ -13,35 +16,13 @@ tag="v$NEXT_VERSION"
 GOOS=darwin
 GOARCH=amd64
 filename="bin/podloxx-${NEXT_VERSION}-$GOOS-$GOARCH"
-# github_api_token=
+# github_api_token= <-- this will be injected during build using an ARG + mogenius key vault env var
 
 go build -ldflags="-extldflags= \
   -X 'podloxx-collector/version.GitCommitHash=${COMMIT_HASH}' \
   -X 'podloxx-collector/version.Branch=${GIT_BRANCH}' \
   -X 'podloxx-collector/version.BuildTimestamp=${BUILD_TIMESTAMP}' \
   -X 'podloxx-collector/version.Ver=${NEXT_VERSION}'" -o $filename .
-
-#!/usr/bin/env bash
-#
-# Author: Stefan Buck
-# License: MIT
-# https://gist.github.com/stefanbuck/ce788fee19ab6eb0b4447a85fc99f447
-#
-#
-# This script accepts the following parameters:
-#
-# * owner
-# * repo
-# * tag
-# * filename
-# * github_api_token
-#
-# Script to upload a release asset using the GitHub API v3.
-#
-# Example:
-#
-# upload-github-release-asset.sh github_api_token=TOKEN owner=stefanbuck repo=playground tag=v0.1.0 filename=./build.zip
-#
 
 xargs=$(which gxargs || which xargs)
 
