@@ -5,7 +5,7 @@
 #
 
 #!/bin/bash
-set -ex
+set -e
 
 xargs=$(which gxargs || which xargs)
 
