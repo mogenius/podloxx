@@ -16,19 +16,24 @@ RUN apk add --no-cache \
     llvm \
     libbpf-dev \
     linux-headers \
-    git
+    git \
+    nodejs \
+    npm
+RUN npm install -g @angular/cli
 
 ARG GITUSER
 ARG GITPAT
 ARG GITAPITOKEN
 ARG VERSION
 
-RUN go env -w GOPRIVATE=github.com/mogenius
-RUN git config --global url."https://$GITUSER:$GITPAT@github.com".insteadOf "https://github.com"
-
 WORKDIR /app
 
 COPY . .
+
+RUN cd ui; npm i; npm run build
+
+RUN go env -w GOPRIVATE=github.com/mogenius
+RUN git config --global url."https://$GITUSER:$GITPAT@github.com".insteadOf "https://github.com"
 
 RUN ./build-client.sh NEXT_VERSION=$VERSION GOOS=darwin GOARCH=amd64 github_api_token=$GITAPITOKEN
 RUN ./build-client.sh NEXT_VERSION=$VERSION GOOS=darwin GOARCH=arm64 github_api_token=$GITAPITOKEN
