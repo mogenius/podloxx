@@ -3,7 +3,8 @@ import { environment } from '@lox/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable, Subject, tap } from 'rxjs';
 import { StatsRecordModel } from '@lox/models/stats-record.model';
-import { IStatsResponse } from '@lox/interfaces/stats-response.interface';
+import { IStatsFlowResponse } from '../interfaces/stats-flow-response.interface';
+import { IStatsTotalResponse } from '../interfaces/stats-total-response.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -14,18 +15,35 @@ export class StatsService {
 
   constructor(private readonly _http: HttpClient) {}
 
-  public stats(): Observable<any> {
+  public statsTotal(): Observable<any> {
     const url = this.cleanUpUrl(`${this.serviceUrl}/${environment.statsTotalService.endPoint}`);
 
     return this._http
-      .request<any>(environment.statsTotalService.method ?? 'GET', url, {
+      .request<IStatsTotalResponse>(environment.statsTotalService.method ?? 'GET', url, {
         headers: {
           'Content-Type': environment.statsTotalService.header.contentType
         }
       })
       .pipe(
-        tap((data: IStatsResponse[]) => {
-          this._records.addRecord(data);
+        tap((data: IStatsTotalResponse) => {
+          this._records.addTotalRecord(data);
+        }),
+        map(() => this._records)
+      );
+  }
+
+  public statsFlow(): Observable<any> {
+    const url = this.cleanUpUrl(`${this.serviceUrl}/${environment.statsFlowService.endPoint}`);
+
+    return this._http
+      .request<IStatsFlowResponse>(environment.statsFlowService.method ?? 'GET', url, {
+        headers: {
+          'Content-Type': environment.statsFlowService.header.contentType
+        }
+      })
+      .pipe(
+        tap((data: IStatsFlowResponse) => {
+          this._records.addFlowRecord(data);
         }),
         map(() => this._records)
       );

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { IPods } from '../../../../interfaces/pod.interface';
+import { StatsService } from '../../../../services/stats.service';
 
 @Component({
   selector: 'lox-dashboard-pod-list',
@@ -6,10 +8,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./dashboard-pod-list.component.scss']
 })
 export class DashboardPodListComponent implements OnInit {
+  constructor(private readonly _statsService: StatsService) {}
 
-  constructor() { }
+  ngOnInit(): void {}
 
-  ngOnInit(): void {
+  get podNames(): string[] {
+    return this._statsService.records.podNames;
   }
 
+  get pods(): IPods {
+    return this._statsService.records.podList;
+  }
 }

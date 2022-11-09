@@ -1,11 +1,13 @@
 <!--/ POD -->
-<td><div class="d-flex flex-column justify-content-center cell-inner">mogenius-redis-5ffg98-3222-fa</div></td>
+<td>
+  <div class="d-flex flex-column justify-content-center cell-inner">{{ pod.podName }}</div>
+</td>
 
 <!--/ NODE -->
 <td>
   <div class="d-flex flex-column justify-content-center cell-inner">
-    <span>Podloxx</span>
-    <span class="color-grey-2 font-size-small">(NODENAME-mastjam2f-5ffg98-3222-fa)</span>
+    <span>{{ pod.namespace }}</span>
+    <span class="color-grey-2 font-size-small">{{ pod.node }}</span>
   </div>
 </td>
 
@@ -16,10 +18,14 @@
 <td><div class="d-flex flex-column justify-content-center cell-inner">365 / 128 b</div></td>
 
 <!--/ AGE -->
-<td><div class="d-flex flex-column justify-content-center cell-inner">17 d</div></td>
+<td>
+  <div class="d-flex flex-column justify-content-center cell-inner">{{ startTime }} d</div>
+</td>
 
 <!--/ CONNECTIONS -->
-<td><div class="d-flex flex-column justify-content-center cell-inner">3</div></td>
+<td>
+  <div class="d-flex flex-column justify-content-center cell-inner">{{ connections }}</div>
+</td>
 
 <!--/ TRAFFIC -->
 <td>

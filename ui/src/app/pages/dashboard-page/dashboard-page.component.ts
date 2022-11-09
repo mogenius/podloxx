@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { StatsService } from '@lox/services/stats.service';
-import { Subscription, take } from 'rxjs';
+import { debounceTime, merge, mergeMap, Subscription, switchMap, take } from 'rxjs';
 
 @Component({
   selector: 'lox-dashboard-page',
@@ -28,11 +28,20 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   public refreshData(): void {
     this._subscriptions.add(
       this._statsService
-        .stats()
-        .pipe(take(1))
+        .statsTotal()
+        .pipe(
+          take(1),
+          debounceTime(1000),
+          switchMap(() => this._statsService.statsFlow())
+        )
         .subscribe({
-          next: () => {},
+          next: () => {
+            setTimeout(() => {
+              this.refreshData();
+            }, 10000);
+          },
           error: (err) => {
+            this.refreshData();
             console.log(err);
           }
         })

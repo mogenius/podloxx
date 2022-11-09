@@ -51,7 +51,9 @@
       </tr>
     </thead>
     <tbody>
-      <tr lox-dashboard-pod-list-item></tr>
+      <ng-container *ngFor="let podKey of podNames">
+        <tr lox-dashboard-pod-list-item [key]="podKey"></tr>
+      </ng-container>
     </tbody>
   </table>
 </div>

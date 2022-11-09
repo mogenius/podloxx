@@ -45,7 +45,7 @@ export class TopNavComponent implements OnInit {
     this._loadingStats = true;
     this._subscriptions.add(
       this._statsService
-        .stats()
+        .statsTotal()
         .pipe(take(1))
         .subscribe({
           next: () => {
