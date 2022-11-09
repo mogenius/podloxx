@@ -147,8 +147,8 @@ func getRedisDataFlow() map[string]structs.InterfaceStatsNumbers {
 	return result
 }
 
-func getRedisDataTotal() []structs.InterfaceStats {
-	var result []structs.InterfaceStats = make([]structs.InterfaceStats, 0)
+func getRedisDataTotal() map[string]structs.InterfaceStats {
+	var result map[string]structs.InterfaceStats = make(map[string]structs.InterfaceStats)
 
 	var cursor uint64
 	var keys []string
@@ -176,7 +176,7 @@ func getRedisDataTotal() []structs.InterfaceStats {
 		if errUnm != nil {
 			logger.Log.Error(errUnm)
 		}
-		result = append(result, data)
+		result[data.PodName] = data
 	}
 
 	return result
