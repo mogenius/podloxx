@@ -35,6 +35,7 @@ var upGrader = websocket.Upgrader{
 const REDISCONSTR = "127.0.0.1:6379"
 
 var redisClient *redis.Client
+var uptime = time.Now()
 
 func TestRedis() {
 	for {
@@ -72,6 +73,7 @@ func initGin() {
 	router.StaticFS("/podloxx", embedFs())
 	router.GET("/traffic/total", getTrafficTotal)
 	router.GET("/traffic/flow", getTrafficFlow)
+	router.GET("/traffic/overview", getTrafficOverview)
 
 	srv := &http.Server{
 		Addr:    fmt.Sprintf(":%s", os.Getenv("API_PORT")),
@@ -106,6 +108,11 @@ func getTrafficFlow(c *gin.Context) {
 
 func getTrafficTotal(c *gin.Context) {
 	data := getRedisDataTotal()
+	c.IndentedJSON(http.StatusOK, &data)
+}
+
+func getTrafficOverview(c *gin.Context) {
+	data := getOverview()
 	c.IndentedJSON(http.StatusOK, &data)
 }
 
@@ -178,6 +185,39 @@ func getRedisDataTotal() map[string]structs.InterfaceStats {
 		}
 		result[data.PodName] = data
 	}
+
+	return result
+}
+
+func getOverview() structs.Overview {
+	result := structs.Overview{}
+	data := getRedisDataTotal()
+	for _, entry := range data {
+		mini := structs.Minify(entry)
+		result.PacketsSum += mini.PacketsSum
+		result.TransmitBytes += mini.TransmitBytes
+		result.ReceivedBytes += mini.ReceivedBytes
+		result.UnknownBytes += mini.UnknownBytes
+		result.LocalReceivedBytes += mini.LocalReceivedBytes
+		result.LocalTransmitBytes += mini.LocalTransmitBytes
+		result.TotalPods += 1
+	}
+
+	// nodes count
+	nodes := make(map[string]bool)
+	for _, value := range data {
+		nodes[value.Node] = true
+	}
+	result.TotalNodes = len(nodes)
+
+	// namespaces count
+	namespaces := make(map[string]bool)
+	for _, value := range data {
+		namespaces[value.Namespace] = true
+	}
+	result.TotalNamespaces = len(namespaces)
+
+	result.Uptime = uptime.Format(time.RFC3339)
 
 	return result
 }
