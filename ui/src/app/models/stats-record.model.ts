@@ -4,12 +4,14 @@ import moment, { Moment } from 'moment';
 import { BehaviorSubject, ReplaySubject } from 'rxjs';
 import { IPods } from '../interfaces/pod.interface';
 import { IStatsFlowResponse } from '../interfaces/stats-flow-response.interface';
+import { IStatsOverviewResponse } from '../interfaces/stats-overview-response.interface';
 import { IStatsTotalResponse } from '../interfaces/stats-total-response.interface';
 
 export class StatsRecordModel {
   private _recordCount: number = 0;
   private _podCount: number = 0;
 
+  private _overviewStats: IStatsOverviewResponse;
   private _podNames: string[] = [];
   private _pods: IPods = {};
   private _lastUpdate: ReplaySubject<Moment> = new ReplaySubject<Moment>();
@@ -64,6 +66,10 @@ export class StatsRecordModel {
     console.log(this._pods);
   }
 
+  public addOverview(data: IStatsOverviewResponse): void {
+    this._overviewStats = data;
+  }
+
   public selectPod(pod: string): void {
     this._filteredRecord[pod] = this._record[pod];
 
@@ -104,5 +110,9 @@ export class StatsRecordModel {
 
   get updateFilter(): ReplaySubject<void> {
     return this._updateFilter;
+  }
+
+  get overviewStats(): IStatsOverviewResponse {
+    return this._overviewStats;
   }
 }

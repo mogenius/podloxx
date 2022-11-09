@@ -23,6 +23,11 @@ export interface IEnvironment {
     endPoint?: string;
     header?: any;
   };
+  statsOverviewService?: {
+    method?: RequestMethodEnum;
+    endPoint?: string;
+    header?: any;
+  };
 }
 
 export const baseEnvironment: IEnvironment = {
@@ -41,6 +46,14 @@ export const baseEnvironment: IEnvironment = {
   statsFlowService: {
     method: RequestMethodEnum.GET,
     endPoint: '/traffic/flow',
+    header: {
+      // authorization: OVER AUTH INTERCEPTOR,
+      contentType: 'application/json'
+    }
+  },
+  statsOverviewService: {
+    method: RequestMethodEnum.GET,
+    endPoint: '/traffic/overview',
     header: {
       // authorization: OVER AUTH INTERCEPTOR,
       contentType: 'application/json'

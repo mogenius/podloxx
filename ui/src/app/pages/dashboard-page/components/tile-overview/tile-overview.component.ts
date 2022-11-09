@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { StatsService } from '@lox/services/stats.service';
 import { Subscription, take } from 'rxjs';
+import { IStatsOverviewResponse } from '../../../../interfaces/stats-overview-response.interface';
 
 @Component({
   selector: 'lox-tile-overview',
@@ -17,6 +18,20 @@ export class TileOverviewComponent implements OnInit {
       this._subscriptions.unsubscribe();
     }
     this._subscriptions = new Subscription();
+
+    this.getnewData();
+  }
+
+  private getnewData(): void {
+    this._subscriptions.add(
+      this._statsService.statsOverview().subscribe((data) => {
+        console.log(this._statsService.records.overviewStats);
+
+        setTimeout(() => {
+          this.getnewData();
+        }, 5000);
+      })
+    );
   }
 
   ngOnDestroy(): void {
@@ -43,5 +58,9 @@ export class TileOverviewComponent implements OnInit {
       total = total + value.receiveBytes[value.receiveBytes.length - 1];
     }
     return total;
+  }
+
+  get overviewData(): IStatsOverviewResponse {
+    return this._statsService.records.overviewStats;
   }
 }

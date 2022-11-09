@@ -5,6 +5,7 @@ import { map, Observable, Subject, tap } from 'rxjs';
 import { StatsRecordModel } from '@lox/models/stats-record.model';
 import { IStatsFlowResponse } from '../interfaces/stats-flow-response.interface';
 import { IStatsTotalResponse } from '../interfaces/stats-total-response.interface';
+import { IStatsOverviewResponse } from '../interfaces/stats-overview-response.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +28,23 @@ export class StatsService {
       .pipe(
         tap((data: IStatsTotalResponse) => {
           this._records.addTotalRecord(data);
+        }),
+        map(() => this._records)
+      );
+  }
+
+  public statsOverview(): Observable<any> {
+    const url = this.cleanUpUrl(`${this.serviceUrl}/${environment.statsOverviewService.endPoint}`);
+
+    return this._http
+      .request<IStatsOverviewResponse>(environment.statsOverviewService.method ?? 'GET', url, {
+        headers: {
+          'Content-Type': environment.statsOverviewService.header.contentType
+        }
+      })
+      .pipe(
+        tap((data: IStatsOverviewResponse) => {
+          this._records.addOverview(data);
         }),
         map(() => this._records)
       );
