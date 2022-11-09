@@ -1,20 +1,5 @@
 <div class="nav-bar d-flex justify-content-between align-items-center px-4">
   <img src="assets/logos/logo-horizontal.svg" alt="" />
-
-  <span class="color-grey-2">
-    POWERED BY
-    <a href="https://mogenius.com" class="color-grey-2">MOGENIUS</a>
-  </span>
-
-  <button
-    class="btn btn-primary d-flex align-items-center px-4"
-    [disabled]="loadingStats"
-    type="button"
-    (click)="refreshData()"
-  >
-    <i class="fa fa-refresh me-3" [class.spin]="loadingStats" aria-hidden="true"></i>
-    REFRESH DATA
-  </button>
 </div>
 
 <nav class="sidebar d-flex flex-column">
@@ -27,21 +12,7 @@
   </div>
 
   <button
-    class="
-      btn btn-clear
-      ms-auto
-      btn-sm
-      mt-0
-      p-0
-      mx-4
-      font-size-xsmall
-      mt-0
-      color-grey-1
-      d-flex
-      align-items-center
-      line-height-90
-      border-0
-    "
+    class="btn btn-clear ms-auto btn-sm mt-0 p-0 mx-4 font-size-xsmall mt-0 color-grey-1 d-flex align-items-center line-height-90 border-0"
     (click)="clearSelection()"
     [class.opacity-0]="selectedPodNameList?.length === 0"
   >

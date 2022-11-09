@@ -15,12 +15,12 @@ export class StatsService {
   constructor(private readonly _http: HttpClient) {}
 
   public stats(): Observable<any> {
-    const url = this.cleanUpUrl(`${this.serviceUrl}/${environment.statsService.endPoint}`);
+    const url = this.cleanUpUrl(`${this.serviceUrl}/${environment.statsTotalService.endPoint}`);
 
     return this._http
-      .request<any>(environment.statsService.method ?? 'GET', url, {
+      .request<any>(environment.statsTotalService.method ?? 'GET', url, {
         headers: {
-          'Content-Type': environment.statsService.header.contentType
+          'Content-Type': environment.statsTotalService.header.contentType
         }
       })
       .pipe(

@@ -33,20 +33,21 @@
 
   &-secondary {
     --btn-color: #003948;
-    --btn-bg: #f0f3f4;
-    --btn-border-color: none;
+    --btn-bg: #f9f9f9;
+    --btn-border-color: #666666;
     --btn-hover-color: #003948;
-    --btn-hover-bg: #e8e8e8;
-    --btn-hover-border-color: none;
+    --btn-hover-bg: #e5e5e5;
+    --btn-hover-border-color: #f9f9f9;
     --btn-focus-shadow-rgb: none;
     --btn-active-color: #003948;
-    --btn-active-bg: #e8e8e8;
+    --btn-active-bg: #f9f9f9;
     --btn-active-border-color: none;
     --btn-active-shadow: none;
     --btn-disabled-color: #cccccc;
     --btn-disabled-bg: #f0f3f4;
     --btn-disabled-border-color: none;
     --btn-disabled-opacity: 1;
+    border: 1px solid #e8e8e8;
   }
 
   &-tertiary {

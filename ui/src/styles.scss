@@ -14,13 +14,6 @@
 
 //@import "./styles/custom.scss"; // custom mogenius changes are connected here
 
-@import './styles/fonts/fonts.scss';
-@import './styles/modules/buttons.scss';
-@import './styles/modules/forms.scss';
-@import './styles/modules/colors.scss';
-@import './styles/modules/dropdowns.scss';
-@import './styles/modules/general.scss';
-
 // Fortawesome
 @import '~@fortawesome/fontawesome-free/scss/fontawesome';
 @import '~@fortawesome/fontawesome-free/scss/solid';
@@ -30,3 +23,11 @@
 
 /* Importing Bootstrap SCSS file. */
 @import '~bootstrap/scss/bootstrap';
+
+@import './styles/fonts/fonts.scss';
+@import './styles/modules/buttons.scss';
+@import './styles/modules/forms.scss';
+@import './styles/modules/colors.scss';
+@import './styles/modules/dropdowns.scss';
+@import './styles/modules/tables.scss';
+@import './styles/modules/general.scss';

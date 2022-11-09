@@ -1,27 +1,13 @@
-<div class="d-flex justify-content-between align-items-center mb-4">
-  <h1 class="h5">DASHBOARD</h1>
-  <button class="btn btn-secondary d-flex align-items-center" (click)="toggleRawData()">
-    <img src="assets/icons/icon-bullet-list.svg" class="me-2 filter-white" height="20px" alt="" />
-    Raw data
-  </button>
-</div>
+<!--/ HEADLINE AND RAW TOGGLE -->
+<lox-headline></lox-headline>
 
-<div class="d-grid fr-3 gap-3 mb-5">
-  <div class="shadow d-flex flex-column p-3 rounded">
-    <span class="font-weight-light color-grey-3">Total selected pods</span>
-    <span class="font-size-xlarge">{{ totalPods }}</span>
-  </div>
-  <div class="shadow d-flex flex-column p-3 rounded">
-    <span class="font-weight-light color-grey-3">Total Transmitted</span>
-    <span class="font-size-xlarge">{{ totalTransmitted | formatBytes }}</span>
-  </div>
-  <div class="shadow d-flex flex-column p-3 rounded">
-    <span class="font-weight-light color-grey-3">Total Received</span>
-    <span class="font-size-xlarge">{{ totalReceived | formatBytes }}</span>
-  </div>
-</div>
+<!--/ OVERVIEW TILES -->
+<lox-tile-overview></lox-tile-overview>
 
-<div class="mb-6">
+<!--/ POD LIST -->
+<lox-dashboard-pod-list></lox-dashboard-pod-list>
+
+<!-- <div class="mb-6">
   <h2 class="h6 mb-4">RECEIVED BYTES</h2>
   <lox-received-bytes-graph></lox-received-bytes-graph>
 </div>
@@ -32,4 +18,4 @@
 
 <div class="mt-4"><lox-table-list></lox-table-list></div>
 
-<lox-raw-data-modal *ngIf="showRaw" (close)="toggleRawData(false)"></lox-raw-data-modal>
+<lox-raw-data-modal *ngIf="showRaw" (close)="toggleRawData(false)"></lox-raw-data-modal> -->

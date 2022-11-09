@@ -1,9 +1,9 @@
 .color- {
-  &lightred {
-    color: var(--lox-lightred);
+  &deepteal {
+    color: var(--lox-deepteal);
   }
-  &darkred {
-    color: var(--lox-darkred);
+  &mogeniusblue {
+    color: var(--lox-mogeniusblue);
   }
   &darkblue {
     color: var(--lox-darkblue);
@@ -51,10 +51,10 @@
 
 .bg- {
   &lightred {
-    background-color: var(--lox-lightred);
+    background-color: var(--lox-deepteal);
   }
   &darkred {
-    background-color: var(--lox-darkred);
+    background-color: var(--lox-mogeniusblue);
   }
   &darkblue {
     background-color: var(--lox-darkblue);

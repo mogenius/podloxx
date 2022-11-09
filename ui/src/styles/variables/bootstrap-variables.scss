@@ -6,8 +6,8 @@ $enable-negative-margins: true;
 /* Additional colors from zeplin file: */
 
 //i PRIMARY FRONT COLORS
-$lox-lightred: #c44a55;
-$lox-darkred: #6e2930;
+$lox-deepteal: #00495d;
+$lox-mogeniusblue: #009bc5;
 $lox-darkblue: #003948;
 $lox-mango: #ff9636;
 $lox-brightpurple: #b620e0;
@@ -26,8 +26,8 @@ $black: #000000;
 $white: #ffffff;
 
 //i PRIMARY FRONT COLORS
-$lox-bg-lightred: #c44a55;
-$lox-bg-darkred: #6e2930;
+$lox-bg-deepteal: #c44a55;
+$lox-bg-mogeniusblue: #6e2930;
 $lox-bg-darkblue: #003948;
 $lox-bg-mango: #ff9636;
 $lox-bg-brightpurple: #b620e0;
@@ -48,8 +48,8 @@ $bg-white: #ffffff;
 /* add them into the already existing bootstrap array:; */
 $colors: (
   // FRONT COLORS
-  'ks-lightred': $lox-lightred,
-  'ks-darkred': $lox-darkred,
+  'ks-lightred': $lox-deepteal,
+  'ks-darkred': $lox-mogeniusblue,
   'ks-darkblue': $lox-darkblue,
   'ks-mango': $lox-mango,
   'ks-brightpurple': $lox-brightpurple,
@@ -67,8 +67,8 @@ $colors: (
   'black': $black,
   'white': $white,
   // BACKGROUND-COLORS
-  'ks-bg-lightred': $lox-bg-lightred,
-  'ks-bg-darkred': $lox-bg-darkred,
+  'ks-bg-lightred': $lox-bg-deepteal,
+  'ks-bg-darkred': $lox-bg-mogeniusblue,
   'ks-bg-darkblue': $lox-bg-darkblue,
   'ks-bg-mango': $lox-bg-mango,
   'ks-bg-brightpurple': $lox-bg-brightpurple,
@@ -95,8 +95,8 @@ $warning: $lox-mango; /* was: $yellow */
 $danger: $lox-red; /* was: $red */
 $secondary: $lox-darkblue; /* was: $red */
 $danger: $lox-red; /* was: $red */
-$light: $lox-lightred; /* was: $red */
-$dark: $lox-darkred; /* was: $red */
+$light: $lox-deepteal; /* was: $red */
+$dark: $lox-mogeniusblue; /* was: $red */
 $info: $lox-blue;
 
 $theme-colors: (
@@ -143,8 +143,8 @@ $form-validation-states: (
 // Color definition
 :root {
   // FRONT COLORS
-  --lox-lightred: #{$lox-lightred};
-  --lox-darkred: #{$lox-darkred};
+  --lox-deepteal: #{$lox-deepteal};
+  --lox-mogeniusblue: #{$lox-mogeniusblue};
   --lox-darkblue: #{$lox-darkblue};
   --lox-mango: #{$lox-mango};
   --lox-brightpurple: #{$lox-brightpurple};
@@ -162,8 +162,8 @@ $form-validation-states: (
   --black: #{$black};
   --white: #{$white};
   // BACKGROUND-COLORS
-  --lox-bg-lightred: #{$lox-bg-lightred};
-  --lox-bg-darkred: #{$lox-bg-darkred};
+  --lox-bg-deepteal: #{$lox-bg-deepteal};
+  --lox-bg-mogeniusblue: #{$lox-bg-mogeniusblue};
   --lox-bg-darkblue: #{$lox-bg-darkblue};
   --lox-bg-mango: #{$lox-bg-mango};
   --lox-bg-brightpurple: #{$lox-bg-brightpurple};
