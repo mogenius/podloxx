@@ -40,6 +40,15 @@ type InterfaceConnection struct {
 	PacketSum uint64 `json:"packetSum"`
 }
 
+type InterfaceStatsNumbers struct {
+	PacketsSum         uint64 `json:"packetsSum"`
+	TransmitBytes      uint64 `json:"transmitBytes"`
+	ReceivedBytes      uint64 `json:"receivedBytes"`
+	UnknownBytes       uint64 `json:"unknownBytes"`
+	LocalTransmitBytes uint64 `json:"localTransmitBytes"`
+	LocalReceivedBytes uint64 `json:"localReceivedBytes"`
+}
+
 func (i InterfaceStats) MarshalBinary() (data []byte, err error) {
 	bytes, err := json.Marshal(i)
 	return bytes, err
@@ -105,6 +114,17 @@ func CopyInterface(src InterfaceStats) InterfaceStats {
 	dst.ReceivedStartBytes = src.ReceivedStartBytes
 	dst.StartTime = src.StartTime
 	dst.Connections = src.Connections
+	return dst
+}
+
+func Minify(src InterfaceStats) InterfaceStatsNumbers {
+	dst := InterfaceStatsNumbers{}
+	dst.PacketsSum = src.PacketsSum
+	dst.TransmitBytes = src.TransmitBytes
+	dst.ReceivedBytes = src.ReceivedBytes
+	dst.UnknownBytes = src.UnknownBytes
+	dst.LocalTransmitBytes = src.LocalTransmitBytes
+	dst.LocalReceivedBytes = src.LocalReceivedBytes
 	return dst
 }
 

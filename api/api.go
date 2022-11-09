@@ -109,8 +109,8 @@ func getTrafficTotal(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, &data)
 }
 
-func getRedisDataFlow() []structs.InterfaceStats {
-	var result []structs.InterfaceStats = make([]structs.InterfaceStats, 0)
+func getRedisDataFlow() map[string]structs.InterfaceStatsNumbers {
+	var result map[string]structs.InterfaceStatsNumbers = make(map[string]structs.InterfaceStatsNumbers)
 
 	var cursor uint64
 	var keys []string
@@ -138,7 +138,7 @@ func getRedisDataFlow() []structs.InterfaceStats {
 		if errUnm != nil {
 			logger.Log.Error(errUnm)
 		}
-		result = append(result, data)
+		result[data.PodName] = structs.Minify(data)
 	}
 
 	// delete processed data
