@@ -18,6 +18,7 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/mogenius/mo-go/logger"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -43,7 +44,7 @@ func TestRedis() {
 		logger.Log.Infof("Waiting for redis to come alive: %s", REDISCONSTR)
 		time.Sleep(1 * time.Second)
 	}
-	data := getRedisData()
+	data := getRedisDataTotal()
 	logger.Log.Infof("Received: %d", len(data))
 }
 
@@ -64,9 +65,13 @@ func InitApiCluster() {
 
 func initGin() {
 	router := gin.Default()
+	config := cors.DefaultConfig()
+	config.AllowAllOrigins = true
+	router.Use(cors.New(config))
+
 	router.StaticFS("/podloxx", embedFs())
-	//router.Static("/podloxx", os.Getenv("PODLOXX_DIST"))
-	router.GET("/traffic", getTraffic)
+	router.GET("/traffic/total", getTrafficTotal)
+	router.GET("/traffic/flow", getTrafficFlow)
 
 	srv := &http.Server{
 		Addr:    fmt.Sprintf(":%s", os.Getenv("API_PORT")),
@@ -94,18 +99,23 @@ func initRedis() bool {
 	return true
 }
 
-func getTraffic(c *gin.Context) {
-	data := getRedisData()
+func getTrafficFlow(c *gin.Context) {
+	data := getRedisDataFlow()
 	c.IndentedJSON(http.StatusOK, &data)
 }
 
-func getRedisData() []structs.InterfaceStats {
+func getTrafficTotal(c *gin.Context) {
+	data := getRedisDataTotal()
+	c.IndentedJSON(http.StatusOK, &data)
+}
+
+func getRedisDataFlow() []structs.InterfaceStats {
 	var result []structs.InterfaceStats = make([]structs.InterfaceStats, 0)
 
 	var cursor uint64
 	var keys []string
 	var err error
-	keys, cursor, err = redisClient.Scan(cursor, "*", MAXPOLL).Result()
+	keys, cursor, err = redisClient.Scan(cursor, "traffic_*", MAXPOLL).Result()
 	if err != nil {
 		panic(err)
 	}
@@ -133,6 +143,41 @@ func getRedisData() []structs.InterfaceStats {
 
 	// delete processed data
 	redisClient.Del(keys...)
+
+	return result
+}
+
+func getRedisDataTotal() []structs.InterfaceStats {
+	var result []structs.InterfaceStats = make([]structs.InterfaceStats, 0)
+
+	var cursor uint64
+	var keys []string
+	var err error
+	keys, cursor, err = redisClient.Scan(cursor, "pod_*", MAXPOLL).Result()
+	if err != nil {
+		panic(err)
+	}
+
+	// return if no new data can be gathered
+	if len(keys) == 0 {
+		return result
+	}
+
+	// get data
+	values, errGet := redisClient.MGet(keys...).Result()
+	if errGet != nil {
+		logger.Log.Infof("Error receiving key %s: %s", keys, errGet)
+	}
+
+	// serialize data
+	for _, value := range values {
+		data := structs.InterfaceStats{}
+		errUnm := json.Unmarshal([]byte(value.(string)), &data)
+		if errUnm != nil {
+			logger.Log.Error(errUnm)
+		}
+		result = append(result, data)
+	}
 
 	return result
 }

@@ -33,10 +33,11 @@ const (
 	BYTES_CHANGE_SEND_TRESHHOLD uint64 = 1024  // 1048576 wait until X bytes are gathered until we send an update to the API server
 )
 
-var TrafficData = make(map[string]*structs.InterfaceStats) // KEY: interfaceName e.g. veth1234abc
-var containerIds = make(map[string]v1.Pod)                 // KEY: containerId e.g. dad2f775d748b7fabdf333279219962a68af4f8bbf0e11933614bcba1d018de6
-var containerPids = make(map[uint32]v1.Pod)                // KEY: HostProcessId e.g. 27123
-var handles = make(map[string]*pcap.Handle)                // KEY: interfaceName e.g. veth1234abc
+var TrafficData = make(map[string]*structs.InterfaceStats)      // KEY: interfaceName e.g. veth1234abc
+var TrafficDataReport = make(map[string]structs.InterfaceStats) // KEY: interfaceName e.g. veth1234abc
+var containerIds = make(map[string]v1.Pod)                      // KEY: containerId e.g. dad2f775d748b7fabdf333279219962a68af4f8bbf0e11933614bcba1d018de6
+var containerPids = make(map[uint32]v1.Pod)                     // KEY: HostProcessId e.g. 27123
+var handles = make(map[string]*pcap.Handle)                     // KEY: interfaceName e.g. veth1234abc
 
 var appStartedAt = time.Now()
 var ingressIps []net.IP
@@ -111,13 +112,19 @@ func initRedis() {
 	logger.Log.Info("REDIS: Connected successfully.")
 }
 
-func writeDataToRedis(data *structs.InterfaceStats) {
-	key := strconv.Itoa(int(httpRequestCount))
-	err := redisClient.Set(key, data, 0).Err()
-	if err != nil {
-		logger.Log.Error(err)
+func writeDataToRedis(data structs.InterfaceStats, shouldPersist bool) {
+	if shouldPersist {
+		err := redisClient.Set("pod_"+data.PodName, data, 0).Err()
+		if err != nil {
+			logger.Log.Error(err)
+		}
+	} else {
+		key := strconv.Itoa(int(httpRequestCount))
+		err := redisClient.Set("traffic_"+key, data, 0).Err()
+		if err != nil {
+			logger.Log.Error(err)
+		}
 	}
-	//fmt.Println(data)
 }
 
 func MonitorLocal() {
@@ -303,6 +310,7 @@ func stopMonitoring(podname string) {
 		if entry.PodName == podname {
 			mutex.Lock()
 			delete(TrafficData, interfaceName)
+			delete(TrafficDataReport, interfaceName)
 			delete(containerIds, entry.ContainerId)
 			handle, isOk := handles[interfaceName]
 			if isOk {
@@ -371,10 +379,24 @@ func printEntriesTable() {
 
 // Report Data to API server
 func reportData() {
-	for _, entry := range TrafficData {
-		// SEND DATA TO REDIS
-		writeDataToRedis(entry)
-		httpRequestCount++
+	for id, entry := range TrafficData {
+		lastReportedEntry, exists := TrafficDataReport[id]
+		if exists == false || ((entry.TransmitBytes+entry.ReceivedBytes)-(lastReportedEntry.TransmitBytes+lastReportedEntry.ReceivedBytes)) > BYTES_CHANGE_SEND_TRESHHOLD {
+
+			var entryToSend structs.InterfaceStats = structs.CopyInterface(*entry)
+			entryToSend.PacketsSum = entry.PacketsSum - TrafficDataReport[id].PacketsSum
+			entryToSend.TransmitBytes = entry.TransmitBytes - TrafficDataReport[id].TransmitBytes
+			entryToSend.ReceivedBytes = entry.ReceivedBytes - TrafficDataReport[id].ReceivedBytes
+			entryToSend.UnknownBytes = entry.UnknownBytes - TrafficDataReport[id].UnknownBytes
+			entryToSend.LocalTransmitBytes = entry.LocalTransmitBytes - TrafficDataReport[id].LocalTransmitBytes
+			entryToSend.LocalReceivedBytes = entry.LocalReceivedBytes - TrafficDataReport[id].LocalReceivedBytes
+
+			// SEND DATA TO QUEUE
+			writeDataToRedis(entryToSend, false)
+			httpRequestCount++
+			TrafficDataReport[id] = *entry
+		}
+		writeDataToRedis(*entry, true)
 	}
 }
 

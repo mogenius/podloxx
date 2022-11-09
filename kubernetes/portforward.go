@@ -88,6 +88,10 @@ func StartPortForward(kubeProvider *KubeProvider, useLocalKubeConfig bool) {
 
 		select {
 		case <-readyCh:
+			logger.Log.Infof("PortForward for %s is ready!", pod.Name)
+			break
+		case <-stopCh:
+			logger.Log.Infof("PortForward for %s is stopped!", pod.Name)
 			break
 		}
 

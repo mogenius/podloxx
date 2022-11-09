@@ -88,6 +88,26 @@ func InitializeInterface(name string, ip string, podName string, namespace strin
 	return entry
 }
 
+func CopyInterface(src InterfaceStats) InterfaceStats {
+	dst := InterfaceStats{}
+	dst.Name = src.Name
+	dst.Ip = src.Ip
+	dst.PodName = src.PodName
+	dst.Namespace = src.Namespace
+	dst.ContainerId = src.ContainerId
+	dst.PacketsSum = src.PacketsSum
+	dst.TransmitBytes = src.TransmitBytes
+	dst.ReceivedBytes = src.ReceivedBytes
+	dst.UnknownBytes = src.UnknownBytes
+	dst.LocalTransmitBytes = src.LocalTransmitBytes
+	dst.LocalReceivedBytes = src.LocalReceivedBytes
+	dst.TransmitStartBytes = src.TransmitStartBytes
+	dst.ReceivedStartBytes = src.ReceivedStartBytes
+	dst.StartTime = src.StartTime
+	dst.Connections = src.Connections
+	return dst
+}
+
 func loadUint64FromFile(filePath string) uint64 {
 	fileContent, err := os.ReadFile(filePath)
 	if err != nil {
