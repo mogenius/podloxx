@@ -2,48 +2,72 @@
   <table class="table">
     <thead>
       <tr>
-        <th scope="col" class="active">
-          <div class="d-flex align-items-center">
+        <th scope="col" [class.active]="currentSortKey === 'podName'">
+          <button class="btn d-flex align-items-center px-0" (click)="sortPods('podName')">
             POD
-            <i class="fa fa-chevron-down ms-2 font-size-xxsmall" aria-hidden="true"></i>
-          </div>
+            <i
+              class="fa fa-chevron-down ms-2 font-size-xxsmall"
+              [class.dsc]="currentSortDirection === 'DSC'"
+              aria-hidden="true"
+            ></i>
+          </button>
         </th>
-        <th scope="col">
-          <div class="d-flex align-items-center">
+        <th scope="col" [class.active]="currentSortKey === 'namespace'">
+          <button class="btn d-flex align-items-center px-0 text-start" (click)="sortPods('namespace')">
             NAMESPACE
             <br />
             (NODE)
-            <i class="fa fa-chevron-down ms-2 font-size-xxsmall" aria-hidden="true"></i>
-          </div>
+            <i
+              class="fa fa-chevron-down ms-2 font-size-xxsmall"
+              [class.dsc]="currentSortDirection === 'DSC'"
+              aria-hidden="true"
+            ></i>
+          </button>
         </th>
-        <th scope="col">
-          <div class="d-flex align-items-center">
+        <th scope="col" [class.active]="currentSortKey === 'externalTraffic'">
+          <button class="btn d-flex align-items-center px-0 text-start" (click)="sortPods('externalTraffic')">
             External
             <br />
             (TX/RX)
-            <i class="fa fa-chevron-down ms-1 font-size-xsmall" aria-hidden="true"></i>
-          </div>
+            <i
+              class="fa fa-chevron-down ms-2 font-size-xxsmall"
+              [class.dsc]="currentSortDirection === 'DSC'"
+              aria-hidden="true"
+            ></i>
+          </button>
         </th>
-        <th scope="col">
-          <div class="d-flex align-items-center">
+        <th scope="col" [class.active]="currentSortKey === 'localTraffic'">
+          <button class="btn d-flex align-items-center px-0 text-start" (click)="sortPods('localTraffic')">
             Internal
-            <i class="fa fa-chevron-down ms-1 font-size-xsmall" aria-hidden="true"></i>
-          </div>
+            <i
+              class="fa fa-chevron-down ms-2 font-size-xxsmall"
+              [class.dsc]="currentSortDirection === 'DSC'"
+              aria-hidden="true"
+            ></i>
+          </button>
         </th>
-        <th scope="col">
-          <div class="d-flex align-items-center">
+        <th scope="col" [class.active]="currentSortKey === 'age'">
+          <button class="btn d-flex align-items-center px-0 text-start" (click)="sortPods('age')">
             Age
-            <i class="fa fa-chevron-down ms-1 font-size-xsmall" aria-hidden="true"></i>
-          </div>
+            <i
+              class="fa fa-chevron-down ms-2 font-size-xxsmall"
+              [class.dsc]="currentSortDirection === 'DSC'"
+              aria-hidden="true"
+            ></i>
+          </button>
         </th>
-        <th scope="col">
-          <div class="d-flex align-items-center">
+        <th scope="col" [class.active]="currentSortKey === 'connections'">
+          <button class="btn d-flex align-items-center px-0 text-start" (click)="sortPods('connections')">
             Connections
-            <i class="fa fa-chevron-down ms-1 font-size-xsmall" aria-hidden="true"></i>
-          </div>
+            <i
+              class="fa fa-chevron-down ms-2 font-size-xxsmall"
+              [class.dsc]="currentSortDirection === 'DSC'"
+              aria-hidden="true"
+            ></i>
+          </button>
         </th>
-        <th scope="col">
-          <div class="d-flex align-items-center">
+        <th scope="col" [class.active]="currentSortKey === 'traffic'">
+          <div class="btn d-flex align-items-center px-0 text-start justify-content-start font-weight-light">
             Traffic
             <i class="fa fa-chevron-down ms-1 font-size-xsmall" aria-hidden="true"></i>
           </div>

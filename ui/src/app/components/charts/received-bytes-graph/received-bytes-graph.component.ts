@@ -10,7 +10,6 @@ import { BaseChartComponent } from '../base-chart.component';
 export class ReceivedBytesGraphComponent extends BaseChartComponent {
   //i OVERRIDE FROM BaseChartComponent
   protected updateData(data: StatsRecordModel): void {
-    console.log(data);
     for (const [key, value] of Object.entries(data.pods)) {
       if (!!this._data[value.index]) {
         // Add Value to existing Entry

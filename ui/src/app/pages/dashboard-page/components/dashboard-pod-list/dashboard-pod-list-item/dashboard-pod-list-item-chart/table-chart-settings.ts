@@ -1,6 +1,6 @@
 import { ChartConfiguration } from 'chart.js';
 
-export const chartConfig: ChartConfiguration = {
+export const tableChartConfig: ChartConfiguration = {
   type: 'line',
   data: {
     datasets: [
@@ -25,15 +25,9 @@ export const chartConfig: ChartConfiguration = {
     },
     scales: {
       'y-axis-0': {
-        display: true,
+        display: false,
         beginAtZero: true,
-        suggestedMin: 0,
-        ticks: {
-          // Include a dollar sign in the ticks
-          callback: function (value) {
-            return `${formatBytes(+value, 1)}`;
-          }
-        }
+        suggestedMin: 0
       },
       'x-axis-0': {
         display: false

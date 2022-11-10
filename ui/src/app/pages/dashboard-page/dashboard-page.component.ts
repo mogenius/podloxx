@@ -26,24 +26,49 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   }
 
   public refreshData(): void {
+    this.refreshTotalStats();
+    this.refreshFlow();
+    this.refreshOverviewStats();
+  }
+
+  //ff refresh Total Stats every 10 seconds
+  private refreshTotalStats(): void {
     this._subscriptions.add(
       this._statsService
         .statsTotal()
-        .pipe(
-          take(1),
-          debounceTime(1000),
-          switchMap(() => this._statsService.statsFlow())
-        )
-        .subscribe({
-          next: () => {
-            setTimeout(() => {
-              this.refreshData();
-            }, 10000);
-          },
-          error: (err) => {
-            this.refreshData();
-            console.log(err);
-          }
+        .pipe(take(1), debounceTime(1000))
+        .subscribe(() => {
+          setTimeout(() => {
+            this.refreshTotalStats();
+          }, 20000);
+        })
+    );
+  }
+
+  //ff refresh Flow Stats every 2 seconds
+  private refreshFlow(): void {
+    this._subscriptions.add(
+      this._statsService
+        .statsFlow()
+        .pipe(take(1), debounceTime(1000))
+        .subscribe(() => {
+          setTimeout(() => {
+            this.refreshFlow();
+          }, 10000);
+        })
+    );
+  }
+
+  //ff refresh overview stats every 10 seconds
+  private refreshOverviewStats(): void {
+    this._subscriptions.add(
+      this._statsService
+        .statsOverview()
+        .pipe(take(1), debounceTime(1000))
+        .subscribe(() => {
+          setTimeout(() => {
+            this.refreshOverviewStats();
+          }, 10000);
         })
     );
   }

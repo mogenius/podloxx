@@ -7,6 +7,7 @@ export interface IPods {
         packSum: number;
       };
     };
+    index: number;
     containerId: string;
     fileName: string;
     ip: string;

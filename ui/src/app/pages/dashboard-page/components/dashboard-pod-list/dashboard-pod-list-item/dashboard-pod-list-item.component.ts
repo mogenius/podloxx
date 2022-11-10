@@ -11,9 +11,7 @@ export class DashboardPodListItemComponent implements OnInit {
 
   constructor(private readonly statsService: StatsService) {}
 
-  ngOnInit(): void {
-    console.log(this.statsService.records.podList[this.key]);
-  }
+  ngOnInit(): void {}
 
   get pod(): any {
     return this.statsService.records.podList[this.key];

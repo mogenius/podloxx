@@ -12,10 +12,19 @@
 </td>
 
 <!--/ EXTERNAL -->
-<td><div class="d-flex flex-column justify-content-center cell-inner">365 / 128 b</div></td>
+<td>
+  <div class="d-flex flex-column justify-content-center cell-inner">
+    {{ pod.transmitBytes - pod.localTransmitBytes | formatBytes }} /
+    {{ pod.receivedBytes - pod.localReceivedBytes | formatBytes }}
+  </div>
+</td>
 
 <!--/ INTERNAL -->
-<td><div class="d-flex flex-column justify-content-center cell-inner">365 / 128 b</div></td>
+<td>
+  <div class="d-flex flex-column justify-content-center cell-inner">
+    {{ pod.localTransmitBytes | formatBytes }} / {{ pod.localReceivedBytes | formatBytes }}
+  </div>
+</td>
 
 <!--/ AGE -->
 <td>
@@ -29,7 +38,7 @@
 
 <!--/ TRAFFIC -->
 <td>
-  <div class="d-flex flex-column justify-content-center cell-inner">
-    <lox-dashboard-pod-list-item-chart></lox-dashboard-pod-list-item-chart>
+  <div class="d-flex flex-column justify-content-center cell-inner chart">
+    <lox-dashboard-pod-list-item-chart [key]="key"></lox-dashboard-pod-list-item-chart>
   </div>
 </td>

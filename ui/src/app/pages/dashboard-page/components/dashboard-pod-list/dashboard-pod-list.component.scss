@@ -4,10 +4,20 @@ table {
       i {
         display: none;
       }
+      button {
+        font-weight: 300;
+        text-transform: uppercase;
+      }
       &.active {
         font-weight: 700;
-        i {
-          display: inline-block;
+        button {
+          font-weight: 700;
+          i {
+            display: inline-block;
+            &.dsc {
+              transform: rotate(180deg);
+            }
+          }
         }
       }
     }

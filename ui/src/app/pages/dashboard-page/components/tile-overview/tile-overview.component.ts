@@ -18,20 +18,6 @@ export class TileOverviewComponent implements OnInit {
       this._subscriptions.unsubscribe();
     }
     this._subscriptions = new Subscription();
-
-    this.getnewData();
-  }
-
-  private getnewData(): void {
-    this._subscriptions.add(
-      this._statsService.statsOverview().subscribe((data) => {
-        console.log(this._statsService.records.overviewStats);
-
-        setTimeout(() => {
-          this.getnewData();
-        }, 5000);
-      })
-    );
   }
 
   ngOnDestroy(): void {

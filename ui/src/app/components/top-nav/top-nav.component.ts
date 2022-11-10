@@ -41,23 +41,6 @@ export class TopNavComponent implements OnInit {
     this._statsService.records.clearSelection();
   }
 
-  public refreshData(): void {
-    this._loadingStats = true;
-    this._subscriptions.add(
-      this._statsService
-        .statsTotal()
-        .pipe(take(1))
-        .subscribe({
-          next: () => {
-            this._loadingStats = false;
-          },
-          error: (err) => {
-            console.log(err);
-          }
-        })
-    );
-  }
-
   get podNameList(): string[] {
     if (this.searchString?.length > 0) {
       return this._statsService.records.podNames.filter((podName) => podName.includes(this.searchString));
