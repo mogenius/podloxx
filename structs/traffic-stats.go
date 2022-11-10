@@ -50,16 +50,20 @@ type InterfaceStatsNumbers struct {
 }
 
 type Overview struct {
-	PacketsSum         uint64 `json:"packetsSum"`
-	TransmitBytes      uint64 `json:"transmitBytes"`
-	ReceivedBytes      uint64 `json:"receivedBytes"`
-	UnknownBytes       uint64 `json:"unknownBytes"`
-	LocalTransmitBytes uint64 `json:"localTransmitBytes"`
-	LocalReceivedBytes uint64 `json:"localReceivedBytes"`
-	TotalNodes         int    `json:"totalNodes"`
-	TotalNamespaces    int    `json:"totalNamespaces"`
-	TotalPods          uint64 `json:"totalPods"`
-	Uptime             string `json:"uptime"`
+	PacketsSum              uint64 `json:"packetsSum"`
+	TransmitBytes           uint64 `json:"transmitBytes"`
+	ReceivedBytes           uint64 `json:"receivedBytes"`
+	UnknownBytes            uint64 `json:"unknownBytes"`
+	LocalTransmitBytes      uint64 `json:"localTransmitBytes"`
+	LocalReceivedBytes      uint64 `json:"localReceivedBytes"`
+	TotalNodes              int    `json:"totalNodes"`
+	TotalNamespaces         int    `json:"totalNamespaces"`
+	TotalPods               uint64 `json:"totalPods"`
+	Uptime                  string `json:"uptime"`
+	LastUpdate              int64  `json:"lastUpdate"`
+	ExternalBandwidthPerSec string `json:"externalBandwidthPerSec"`
+	InternalBandwidthPerSec string `json:"internalBandwidthPerSec"`
+	PacketsPerSec           int    `json:"packetsPerSec"`
 }
 
 func (i InterfaceStats) MarshalBinary() (data []byte, err error) {

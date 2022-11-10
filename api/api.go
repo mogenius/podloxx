@@ -17,6 +17,7 @@ import (
 	"github.com/go-redis/redis"
 	"github.com/gorilla/websocket"
 	"github.com/mogenius/mo-go/logger"
+	"github.com/mogenius/mo-go/utils"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -36,6 +37,7 @@ const REDISCONSTR = "127.0.0.1:6379"
 
 var redisClient *redis.Client
 var uptime = time.Now()
+var lastOverview structs.Overview = structs.Overview{}
 
 func TestRedis() {
 	for {
@@ -113,6 +115,7 @@ func getTrafficTotal(c *gin.Context) {
 
 func getTrafficOverview(c *gin.Context) {
 	data := getOverview()
+	lastOverview = data
 	c.IndentedJSON(http.StatusOK, &data)
 }
 
@@ -122,9 +125,10 @@ func getRedisDataFlow() map[string]structs.InterfaceStatsNumbers {
 	var cursor uint64
 	var keys []string
 	var err error
-	keys, cursor, err = redisClient.Scan(cursor, "traffic_*", MAXPOLL).Result()
+	keys, _, err = redisClient.Scan(cursor, "traffic_*", MAXPOLL).Result()
 	if err != nil {
-		panic(err)
+		logger.Log.Error(err)
+		return result
 	}
 
 	// return if no new data can be gathered
@@ -160,9 +164,10 @@ func getRedisDataTotal() map[string]structs.InterfaceStats {
 	var cursor uint64
 	var keys []string
 	var err error
-	keys, cursor, err = redisClient.Scan(cursor, "pod_*", MAXPOLL).Result()
+	keys, _, err = redisClient.Scan(cursor, "pod_*", MAXPOLL).Result()
 	if err != nil {
-		panic(err)
+		logger.Log.Error(err)
+		return result
 	}
 
 	// return if no new data can be gathered
@@ -190,7 +195,7 @@ func getRedisDataTotal() map[string]structs.InterfaceStats {
 }
 
 func getOverview() structs.Overview {
-	result := structs.Overview{}
+	result := structs.Overview{ExternalBandwidthPerSec: "0 B", InternalBandwidthPerSec: "0 B"}
 	data := getRedisDataTotal()
 	for _, entry := range data {
 		mini := structs.Minify(entry)
@@ -218,6 +223,21 @@ func getOverview() structs.Overview {
 	result.TotalNamespaces = len(namespaces)
 
 	result.Uptime = uptime.Format(time.RFC3339)
+
+	result.LastUpdate = time.Now().Unix()
+
+	// seconds since lastOverview.LastUpdate
+	seconds := result.LastUpdate - lastOverview.LastUpdate
+	if seconds > 0 {
+		externalTraffic := int((result.ReceivedBytes + result.TransmitBytes) - (result.LocalReceivedBytes + result.LocalTransmitBytes))
+		externalTrafficLast := int((lastOverview.ReceivedBytes + lastOverview.TransmitBytes) - (lastOverview.LocalReceivedBytes + lastOverview.LocalTransmitBytes))
+		result.ExternalBandwidthPerSec = utils.BytesToHumanReadable(uint64(externalTraffic - externalTrafficLast/int(seconds)))
+		result.InternalBandwidthPerSec = utils.BytesToHumanReadable(uint64(int(result.LocalReceivedBytes+result.LocalTransmitBytes) - (int(lastOverview.LocalReceivedBytes+lastOverview.LocalTransmitBytes))/int(seconds)))
+		result.PacketsPerSec = (int(result.PacketsSum) - int(lastOverview.PacketsSum)) / int(seconds)
+	} else {
+		result.InternalBandwidthPerSec = lastOverview.InternalBandwidthPerSec
+		result.ExternalBandwidthPerSec = lastOverview.ExternalBandwidthPerSec
+	}
 
 	return result
 }
