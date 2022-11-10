@@ -6,8 +6,6 @@ import { AppComponent } from './app.component';
 import { DashboardPageComponent } from './pages/dashboard-page/dashboard-page.component';
 import { NgChartsModule } from 'ng2-charts';
 import { HttpClientModule } from '@angular/common/http';
-import { ReceivedBytesGraphComponent } from './components/charts/received-bytes-graph/received-bytes-graph.component';
-import { TransmitBytesGraphComponent } from './components/charts/transmit-bytes-graph/transmit-bytes-graph.component';
 import { TopNavComponent } from './components/top-nav/top-nav.component';
 import { FormsModule } from '@angular/forms';
 import { TableListComponent } from './components/table-list/table-list.component';
@@ -27,8 +25,6 @@ import { DashboardPodListItemChartComponent } from './pages/dashboard-page/compo
   declarations: [
     AppComponent,
     DashboardPageComponent,
-    TransmitBytesGraphComponent,
-    ReceivedBytesGraphComponent,
     TopNavComponent,
     TableListComponent,
     TableListItemComponent,

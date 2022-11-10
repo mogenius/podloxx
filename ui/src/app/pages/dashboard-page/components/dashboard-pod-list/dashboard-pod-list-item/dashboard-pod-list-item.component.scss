@@ -7,4 +7,10 @@
     height: 50px;
     width: 250px;
   }
+
+  &.pod-name,
+  &.namespace {
+    min-width: 0px;
+    max-width: 250px;
+  }
 }
