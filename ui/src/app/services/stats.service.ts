@@ -12,7 +12,7 @@ import { IStatsOverviewResponse } from '../interfaces/stats-overview-response.in
 })
 export class StatsService {
   private _records: StatsRecordModel = new StatsRecordModel();
-  private _rawData: string;
+  private _rawData: any;
 
   constructor(private readonly _http: HttpClient) {}
 
@@ -26,6 +26,9 @@ export class StatsService {
         }
       })
       .pipe(
+        tap((data: IStatsTotalResponse) => {
+          this._rawData = data;
+        }),
         tap((data: IStatsTotalResponse) => {
           this._records.addTotalRecord(data);
         }),
@@ -77,5 +80,10 @@ export class StatsService {
 
   public get records(): StatsRecordModel {
     return this._records;
+  }
+
+  // get raw data
+  public get rawData(): any {
+    return this._rawData;
   }
 }

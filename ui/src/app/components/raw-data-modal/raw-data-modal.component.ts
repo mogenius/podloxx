@@ -26,7 +26,7 @@ export class RawDataModalComponent implements OnInit {
     this.close.emit(true);
   }
 
-  get data(): string {
-    return this._data;
+  get data(): any {
+    return this._statsService.rawData;
   }
 }

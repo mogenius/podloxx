@@ -78,6 +78,10 @@
       <ng-container *ngFor="let podKey of podNames">
         <tr lox-dashboard-pod-list-item [key]="podKey"></tr>
       </ng-container>
+
+      <ng-container *ngIf="podNames.length < 1">
+        <tr lox-dashboard-pod-list-item [key]="podKey" *ngFor="let item of [1, 2, 3, 4, 5, 6, 7, 8, 9]"></tr>
+      </ng-container>
     </tbody>
   </table>
 </div>

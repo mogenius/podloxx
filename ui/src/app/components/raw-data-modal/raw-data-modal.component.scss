@@ -5,6 +5,7 @@
   left: 0px;
   right: 0px;
   bottom: 0px;
+  z-index: 999;
   background-color: rgba(black, 0.9);
   .raw-header {
     height: 70px;
@@ -34,7 +35,7 @@
     }
     pre {
       color: white;
-      font-size: 12px;
+      font-size: 14px;
       font-family: 'Courier New', Courier, monospace;
       padding: 30px;
       line-height: 14px;

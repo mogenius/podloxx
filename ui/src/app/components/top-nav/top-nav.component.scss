@@ -96,6 +96,26 @@
         }
       }
     }
+
+    .pseudo-text {
+      height: 16px;
+      width: 100%;
+      background-color: var(--grey-3);
+      border-radius: 8px;
+      animation: pulsing 1.5s infinite;
+
+      @keyframes pulsing {
+        0% {
+          opacity: 0.5;
+        }
+        50% {
+          opacity: 0.2;
+        }
+        100% {
+          opacity: 0.5;
+        }
+      }
+    }
   }
 }
 

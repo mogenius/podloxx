@@ -1,12 +1,16 @@
 export interface IStatsOverviewResponse {
-  packetsSum: number;
-  transmitBytes: number;
-  receivedBytes: number;
-  unknownBytes: number;
-  localTransmitBytes: number;
+  externalBandwidthPerSec: string;
+  internalBandwidthPerSec: string;
+  lastUpdate: number;
   localReceivedBytes: number;
-  totalNodes: number;
+  localTransmitBytes: number;
+  packetsPerSec: number;
+  packetsSum: number;
+  receivedBytes: number;
   totalNamespaces: number;
+  totalNodes: number;
   totalPods: number;
+  transmitBytes: number;
+  unknownBytes: number;
   uptime: string;
 }

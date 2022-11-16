@@ -76,8 +76,7 @@ export class DashboardPodListItemChartComponent implements OnInit, OnDestroy {
         this._data[0] = {
           data: [...totalBytesArray, ...totalBytesArray],
           label: this.key,
-          borderColor: '#009bc5',
-          backgroundColor: '#009bc5'
+          borderColor: '#009bc5'
         };
 
         this._lineChartLabels = [...dataLabelArray, ...dataLabelArray];
@@ -86,8 +85,7 @@ export class DashboardPodListItemChartComponent implements OnInit, OnDestroy {
         this._data[0] = {
           data: [...totalBytesArray],
           label: this.key,
-          borderColor: '#009bc5',
-          backgroundColor: '#009bc5'
+          borderColor: '#009bc5'
         };
 
         this._lineChartLabels = [...dataLabelArray];

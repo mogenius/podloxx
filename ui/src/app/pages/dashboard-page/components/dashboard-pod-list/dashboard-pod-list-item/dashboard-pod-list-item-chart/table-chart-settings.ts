@@ -5,7 +5,9 @@ export const tableChartConfig: ChartConfiguration = {
   data: {
     datasets: [
       {
-        data: []
+        data: [],
+        fill: true,
+        backgroundColor: 'rgba(255, 255, 255, 1)'
       }
     ],
     labels: []

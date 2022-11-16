@@ -242,7 +242,13 @@ export class StatsRecordModel {
   }
 
   get sortedNameList(): string[] | undefined {
-    return this._sortedNameList;
+    if (!!this.selectedpodNames && this.selectedpodNames.length > 0) {
+      return this._sortedNameList?.filter((podName) => {
+        return this.selectedpodNames.includes(podName);
+      });
+    } else {
+      return this._sortedNameList;
+    }
   }
 
   get updateTotalEvent(): ReplaySubject<void> {

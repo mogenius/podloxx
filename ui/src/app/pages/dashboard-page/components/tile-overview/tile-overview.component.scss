@@ -1,0 +1,31 @@
+.pseudotile {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-shadow: 0 2px 20px 0 rgba(0, 0, 0, 0.1), 0 1px 3px 0 rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  padding: 16px;
+  height: 136px;
+  background-color: var(--grey-6);
+  animation: pulsing 1s infinite;
+}
+
+.double-tile {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: white;
+  box-shadow: 0 2px 20px 0 rgba(0, 0, 0, 0.1), 0 1px 3px 0 rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  padding: 16px;
+
+  .value {
+    height: 80px;
+  }
+
+  .vertical-line {
+    background-color: var(--grey-5);
+    width: 2px;
+    height: 50%;
+  }
+}

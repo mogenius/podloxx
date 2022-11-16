@@ -10,6 +10,7 @@ import { debounceTime, merge, mergeMap, Subscription, switchMap, take } from 'rx
 export class DashboardPageComponent implements OnInit, OnDestroy {
   private _subscriptions: Subscription;
   private _showRaw: boolean = false;
+  public timer: NodeJS.Timeout;
   constructor(private readonly _statsService: StatsService) {}
 
   ngOnInit(): void {
@@ -40,7 +41,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         .subscribe(() => {
           setTimeout(() => {
             this.refreshTotalStats();
-          }, 20000);
+          }, 10000);
         })
     );
   }
@@ -52,7 +53,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         .statsFlow()
         .pipe(take(1), debounceTime(1000))
         .subscribe(() => {
-          setTimeout(() => {
+          this.timer = setTimeout(() => {
             this.refreshFlow();
           }, 10000);
         })

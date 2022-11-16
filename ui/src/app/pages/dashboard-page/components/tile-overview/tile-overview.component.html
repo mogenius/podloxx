@@ -1,4 +1,4 @@
-<div class="d-grid fr-4 gap-4 mb-5">
+<div class="d-grid fr-4 gap-4 mb-5" *ngIf="!!overviewData; else emptystate">
   <lox-status-tile [value]="overviewData?.packetsSum" suffix="" tileName="Total Packets"></lox-status-tile>
   <lox-status-tile [value]="overviewData?.totalNamespaces" suffix="" tileName="Total Naemspaces"></lox-status-tile>
 
@@ -6,27 +6,61 @@
 
   <lox-status-tile [value]="overviewData?.totalPods" suffix="" tileName="Total Pods"></lox-status-tile>
 
-  <lox-status-tile
-    [value]="overviewData?.localReceivedBytes | formatBytes"
-    suffix=""
-    tileName="Local received"
-  ></lox-status-tile>
+  <lox-status-tile [value]="overviewData?.packetsPerSec" suffix="" tileName="Packets per Second"></lox-status-tile>
 
-  <lox-status-tile
-    [value]="overviewData?.localTransmitBytes | formatBytes"
-    suffix=""
-    tileName="Local transmitted"
-  ></lox-status-tile>
+  <!-- DoubleTiles -->
 
-  <lox-status-tile
-    [value]="overviewData?.receivedBytes | formatBytes"
-    suffix=""
-    tileName="Total transmitted"
-  ></lox-status-tile>
+  <!-- INTERNAL/EXTERNAL BANDWIDTH -->
+  <div class="double-tile">
+    <span class="tile-type color-grey-3">Bandwidth/s</span>
+    <div class="value d-flex align-items-center justify-content-center">
+      <span class="color-deepteal h5 font-weight-semibold d-flex align-items-center">
+        {{ overviewData?.internalBandwidthPerSec }}
+        <i class="fa fa-chevron-up font-size-small ms-2 color-green" aria-hidden="true"></i>
+      </span>
+      <div class="vertical-line mx-3"></div>
+      <span class="color-deepteal h5 font-weight-semibold d-flex align-items-center">
+        {{ overviewData?.externalBandwidthPerSec }}
+        <i class="fa fa-chevron-down font-size-small ms-2 color-red" aria-hidden="true"></i>
+      </span>
+    </div>
+  </div>
 
-  <lox-status-tile
-    [value]="overviewData?.transmitBytes | formatBytes"
-    suffix=""
-    tileName="Total received"
-  ></lox-status-tile>
+  <!-- TOTAL TRANSMITTED/RECEIVED -->
+  <div class="double-tile">
+    <span class="tile-type color-grey-3">Local traffic</span>
+    <div class="value d-flex align-items-center justify-content-center">
+      <span class="color-deepteal h5 font-weight-semibold d-flex align-items-center">
+        {{ overviewData?.localReceivedBytes | formatBytes }}
+        <i class="fa fa-chevron-up font-size-small ms-2 color-green" aria-hidden="true"></i>
+      </span>
+      <div class="vertical-line mx-3"></div>
+      <span class="color-deepteal h5 font-weight-semibold d-flex align-items-center">
+        {{ overviewData?.localTransmitBytes | formatBytes }}
+        <i class="fa fa-chevron-down font-size-small ms-2 color-red" aria-hidden="true"></i>
+      </span>
+    </div>
+  </div>
+
+  <!-- LOCAL TRANSMITTED/RECEIVED -->
+  <div class="double-tile">
+    <span class="tile-type color-grey-3">External traffic</span>
+    <div class="value d-flex align-items-center justify-content-center">
+      <span class="color-deepteal h5 font-weight-semibold d-flex align-items-center">
+        {{ overviewData?.receivedBytes - overviewData?.localReceivedBytes | formatBytes }}
+        <i class="fa fa-chevron-up font-size-small ms-2 color-green" aria-hidden="true"></i>
+      </span>
+      <div class="vertical-line mx-3"></div>
+      <span class="color-deepteal h5 font-weight-semibold d-flex align-items-center">
+        {{ overviewData?.transmitBytes - overviewData?.localTransmitBytes | formatBytes }}
+        <i class="fa fa-chevron-down font-size-small ms-2 color-red" aria-hidden="true"></i>
+      </span>
+    </div>
+  </div>
 </div>
+
+<ng-template #emptystate>
+  <div class="d-grid fr-4 gap-4 mb-5">
+    <div class="pseudotile" *ngFor="let tile of [1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4]"></div>
+  </div>
+</ng-template>

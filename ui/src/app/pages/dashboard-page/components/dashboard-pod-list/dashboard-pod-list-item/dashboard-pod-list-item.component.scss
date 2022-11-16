@@ -14,3 +14,20 @@
     max-width: 250px;
   }
 }
+
+.pseudo-text {
+  // random width between 50% and 100%
+  width: calc(50% + 50% * var(--pseudo-text-width));
+  height: 16px;
+  background-color: var(--grey-3);
+  border-radius: 8px;
+  animation: pulsing 1.5s infinite;
+}
+
+.empty-chart {
+  width: 250px;
+  height: 50px;
+  background-color: var(--grey-3);
+  border-radius: 8px;
+  animation: pulsing 1.5s infinite;
+}
