@@ -34,6 +34,7 @@
     "class-validator": "^0.13.2",
     "deepmerge": "^4.2.2",
     "highlight-ts": "^9.12.1-2",
+    "loader-utils": "^1.4.2",
     "moment": "^2.29.4",
     "ng2-charts": "^4.0.1",
     "rxjs": "~7.5.7",
