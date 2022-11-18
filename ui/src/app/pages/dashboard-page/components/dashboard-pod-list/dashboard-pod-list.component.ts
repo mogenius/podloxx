@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { IPods } from '../../../../interfaces/pod.interface';
 import { StatsService } from '../../../../services/stats.service';
 
@@ -8,6 +8,7 @@ import { StatsService } from '../../../../services/stats.service';
   styleUrls: ['./dashboard-pod-list.component.scss']
 })
 export class DashboardPodListComponent implements OnInit {
+  @Input() refreshing: boolean = false;
   private _currentSortKey: string = 'podName';
   private _currentSortDirection: 'ASC' | 'DSC' = 'ASC';
 

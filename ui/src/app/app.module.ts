@@ -21,6 +21,7 @@ import { DashboardPodListComponent } from './pages/dashboard-page/components/das
 import { DashboardPodListItemComponent } from './pages/dashboard-page/components/dashboard-pod-list/dashboard-pod-list-item/dashboard-pod-list-item.component';
 import { DashboardPodListItemChartComponent } from './pages/dashboard-page/components/dashboard-pod-list/dashboard-pod-list-item/dashboard-pod-list-item-chart/dashboard-pod-list-item-chart.component';
 import { DoubleStatusTileComponent } from './pages/dashboard-page/components/tile-overview/double-status-tile/double-status-tile.component';
+import { ReloadIndicatorComponent } from './components/reload-indicator/reload-indicator.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { DoubleStatusTileComponent } from './pages/dashboard-page/components/til
     DashboardPodListComponent,
     DashboardPodListItemComponent,
     DashboardPodListItemChartComponent,
-    DoubleStatusTileComponent
+    DoubleStatusTileComponent,
+    ReloadIndicatorComponent
   ],
   imports: [FormsModule, HttpClientModule, BrowserModule, AppRoutingModule, NgChartsModule, NgbModule],
   providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy }],

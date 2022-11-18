@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { StatsService } from '@lox/services/stats.service';
 import { Subscription, take } from 'rxjs';
 
@@ -8,8 +8,11 @@ import { Subscription, take } from 'rxjs';
   styleUrls: ['./headline.component.scss']
 })
 export class HeadlineComponent implements OnInit {
+  @Input() refreshing: boolean = false;
+
   private _subscriptions: Subscription;
   private _showRaw: boolean = false;
+
   constructor(private readonly _statsService: StatsService) {}
 
   ngOnInit(): void {

@@ -1,5 +1,14 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
   <h1 class="h4 color-deepteal">Dashboard</h1>
+  <svg viewBox="0 0 36 36" overflow="visible" class="circular-chart me-auto ms-3 mb-1" [class.animated]="refreshing">
+    <path
+      class="circle"
+      stroke-dasharray="60, 100"
+      d="M18 2.0845
+      a 15.9155 15.9155 0 0 1 0 31.831
+      a 15.9155 15.9155 0 0 1 0 -31.831"
+    />
+  </svg>
   <button class="btn btn-secondary d-flex align-items-center px-3" (click)="toggleRawData()">
     <img src="assets/icons/icon-code.svg" class="me-2" height="14px" alt="" />
     Raw data

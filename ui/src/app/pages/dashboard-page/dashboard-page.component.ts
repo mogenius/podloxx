@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { StatsService } from '@lox/services/stats.service';
-import { debounceTime, merge, mergeMap, Subscription, switchMap, take } from 'rxjs';
+import { log } from 'console';
+import { debounceTime, filter, merge, mergeMap, Subject, Subscription, switchMap, take, tap } from 'rxjs';
 
 @Component({
   selector: 'lox-dashboard-page',
@@ -10,7 +11,13 @@ import { debounceTime, merge, mergeMap, Subscription, switchMap, take } from 'rx
 export class DashboardPageComponent implements OnInit, OnDestroy {
   private _subscriptions: Subscription;
   private _showRaw: boolean = false;
-  public timer: NodeJS.Timeout;
+
+  private _isReady: Subject<void> = new Subject<void>();
+  private _ready: boolean = false;
+
+  private _refreshingOverview: boolean = false;
+  private _refreshingFlow: boolean = false;
+
   constructor(private readonly _statsService: StatsService) {}
 
   ngOnInit(): void {
@@ -20,6 +27,18 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     this._subscriptions = new Subscription();
 
     this.refreshData();
+
+    this._subscriptions.add(
+      this._isReady
+        .pipe(
+          filter(() => {
+            return this._statsService.records.podNames.length > 0;
+          })
+        )
+        .subscribe(() => {
+          this._ready = true;
+        })
+    );
   }
 
   ngOnDestroy(): void {
@@ -38,7 +57,9 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
       this._statsService
         .statsTotal()
         .pipe(take(1), debounceTime(1000))
-        .subscribe(() => {
+        .subscribe((data) => {
+          this._isReady.next();
+
           setTimeout(() => {
             this.refreshTotalStats();
           }, 10000);
@@ -52,8 +73,12 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
       this._statsService
         .statsFlow()
         .pipe(take(1), debounceTime(1000))
-        .subscribe(() => {
-          this.timer = setTimeout(() => {
+        .subscribe((data) => {
+          this._isReady.next();
+
+          this._refreshingFlow = true;
+          setTimeout(() => {
+            this._refreshingFlow = false;
             this.refreshFlow();
           }, 10000);
         })
@@ -67,7 +92,11 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         .statsOverview()
         .pipe(take(1), debounceTime(1000))
         .subscribe(() => {
+          this._isReady.next();
+
+          this._refreshingOverview = true;
           setTimeout(() => {
+            this._refreshingOverview = false;
             this.refreshOverviewStats();
           }, 10000);
         })
@@ -90,29 +119,19 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  get totalPods(): number {
-    return this._statsService.records.selectedpodNames.length > 0
-      ? this._statsService.records.selectedpodNames.length
-      : this._statsService.records.podNames.length;
-  }
-
-  get totalTransmitted(): number {
-    let total = 0;
-    for (const [key, value] of Object.entries(this._statsService.records.pods)) {
-      total = total + value.transmitBytes[value.transmitBytes.length - 1];
-    }
-    return total;
-  }
-
-  get totalReceived(): number {
-    let total = 0;
-    for (const [key, value] of Object.entries(this._statsService.records.pods)) {
-      total = total + value.receiveBytes[value.receiveBytes.length - 1];
-    }
-    return total;
-  }
-
   get showRaw(): boolean {
     return this._showRaw;
+  }
+
+  get refreshingOverview(): boolean {
+    return this._refreshingOverview;
+  }
+
+  get refreshingFlow(): boolean {
+    return this._refreshingFlow;
+  }
+
+  get ready(): boolean {
+    return this._ready;
   }
 }
