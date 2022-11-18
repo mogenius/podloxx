@@ -1,9 +1,9 @@
 <div class="d-grid fr-4 gap-4 mb-5" *ngIf="!!overviewData; else emptystate">
-  <lox-status-tile [value]="overviewData?.totalNodes" suffix="" tileName="Total Nodes"></lox-status-tile>
-  <lox-status-tile [value]="overviewData?.totalNamespaces" suffix="" tileName="Total Namespaces"></lox-status-tile>
-  <lox-status-tile [value]="overviewData?.totalPods" suffix="" tileName="Total Pods"></lox-status-tile>
-  <lox-status-tile [value]="overviewData?.packetsSum" suffix="" tileName="Total Packets"></lox-status-tile>
-  <lox-status-tile [value]="overviewData?.packetsPerSec" suffix="" tileName="Packets per Second"></lox-status-tile>
+  <lox-status-tile [value]="overviewData?.totalNodes" tileName="Total Nodes"></lox-status-tile>
+  <lox-status-tile [value]="overviewData?.totalNamespaces" tileName="Total Namespaces"></lox-status-tile>
+  <lox-status-tile [value]="overviewData?.totalPods" tileName="Total Pods"></lox-status-tile>
+  <lox-status-tile [value]="overviewData?.packetsSum" tileName="Total Packets"></lox-status-tile>
+  <lox-status-tile [value]="overviewData?.packetsPerSec" tileName="Packets per Second"></lox-status-tile>
 
   <!-- DoubleTiles -->
 

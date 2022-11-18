@@ -76,7 +76,9 @@ export class DashboardPodListItemChartComponent implements OnInit, OnDestroy {
         this._data[0] = {
           data: [...totalBytesArray, ...totalBytesArray],
           label: this.key,
-          borderColor: '#009bc5'
+          borderColor: '#009bc5',
+          fill: true,
+          backgroundColor: 'rgba(0, 155, 197, 0.1)'
         };
 
         this._lineChartLabels = [...dataLabelArray, ...dataLabelArray];
@@ -85,16 +87,14 @@ export class DashboardPodListItemChartComponent implements OnInit, OnDestroy {
         this._data[0] = {
           data: [...totalBytesArray],
           label: this.key,
-          borderColor: '#009bc5'
+          borderColor: '#009bc5',
+          fill: true,
+          backgroundColor: 'rgba(0, 155, 197, 0.1)'
         };
 
         this._lineChartLabels = [...dataLabelArray];
       }
     }
-  }
-
-  protected generateRandomHex(): string {
-    return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
   }
 
   get chartConfig(): ChartConfiguration {

@@ -14,11 +14,9 @@ export class RawDataModalComponent implements OnInit {
     }
   }
 
-  constructor(private readonly _statsService: StatsService) {}
-
   @Output() close: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  private _data: string;
+  constructor(private readonly _statsService: StatsService) {}
 
   ngOnInit(): void {}
 

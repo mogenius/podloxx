@@ -103,26 +103,6 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     );
   }
 
-  public toggleRawData(state?: boolean): void {
-    if (!!state) {
-      this._showRaw = state;
-    } else {
-      this._showRaw = !this.showRaw;
-    }
-
-    if (this._showRaw) {
-      document.body.classList.add('unscroll');
-      document.getElementsByTagName('html')[0].classList.add('unscroll');
-    } else {
-      document.body.classList.remove('unscroll');
-      document.getElementsByTagName('html')[0].classList.remove('unscroll');
-    }
-  }
-
-  get showRaw(): boolean {
-    return this._showRaw;
-  }
-
   get refreshingOverview(): boolean {
     return this._refreshingOverview;
   }

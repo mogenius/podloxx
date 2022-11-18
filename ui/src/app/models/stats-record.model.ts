@@ -7,35 +7,37 @@ import { IStatsOverviewResponse } from '../interfaces/stats-overview-response.in
 import { IStatsTotalResponse } from '../interfaces/stats-total-response.interface';
 
 export class StatsRecordModel {
-  private _recordCount: number = 0;
-
+  /// RAW DATA
   private _overviewStats: IStatsOverviewResponse;
-  private _podNames: string[] = [];
-  private _pods: IPods = {};
+
+  /// BASE INFORMATION
+  private _recordCount: number = 0;
   private _lastUpdate: ReplaySubject<Moment> = new ReplaySubject<Moment>();
-  private _updateFilter: ReplaySubject<void> = new ReplaySubject<void>();
+
+  private _podCount: number = 0;
+  private _podNames: string[] = [];
+
+  private _pods: IPods = {};
+
   private _record: IStatsRecord = {};
   private _filteredRecord: IStatsRecord = {};
-  private _podCount: number = 0;
+  private _sortedNameList: string[] | undefined = undefined;
+
   private _currentSortKey: string = 'podName';
   private _currentSortDirection: 'ASC' | 'DSC' = 'ASC';
 
+  /// UPDATE EVENTS
   private _updateTotalEvent: ReplaySubject<void> = new ReplaySubject<void>();
   private _updateFlowEvent: ReplaySubject<void> = new ReplaySubject<void>();
   private _updateOverviewEvent: ReplaySubject<void> = new ReplaySubject<void>();
 
-  private _sortedNameList: string[] | undefined = undefined;
-
   constructor() {}
 
   public addTotalRecord(rawData: IStatsTotalResponse) {
-    //key value pair to array
-    const data = Object.entries(rawData);
     this._podNames = Object.keys(rawData);
 
     let changed: boolean = false;
 
-    // merge new data from rawData into _pods
     Object.keys(rawData).forEach((key: string) => {
       if (!!this._pods[key]) {
         this._pods[key] = { ...this._pods[key], ...rawData[key] };
@@ -84,8 +86,6 @@ export class StatsRecordModel {
 
   public selectPod(pod: string): void {
     this._filteredRecord[pod] = this._record[pod];
-
-    this._updateFilter.next();
   }
 
   public sortPods(key: string, direction: 'ASC' | 'DSC' = 'ASC'): void {
@@ -203,14 +203,13 @@ export class StatsRecordModel {
   //ff Deselect Pod if one was selectet over navigation
   public deSelectPod(pod: string): void {
     delete this._filteredRecord[pod];
-    this._updateFilter.next();
   }
 
+  //ff Clear all selected Pods to normal array
   public clearSelection(): void {
     Object.keys(this._filteredRecord).forEach((pod: string) => {
       delete this._filteredRecord[pod];
     });
-    this._updateFilter.next();
   }
 
   get podNames(): string[] {
@@ -231,10 +230,6 @@ export class StatsRecordModel {
 
   get lastUpdate(): ReplaySubject<Moment> {
     return this._lastUpdate;
-  }
-
-  get updateFilter(): ReplaySubject<void> {
-    return this._updateFilter;
   }
 
   get overviewStats(): IStatsOverviewResponse {

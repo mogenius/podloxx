@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '@lox/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { map, Observable, Subject, tap } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 import { StatsRecordModel } from '@lox/models/stats-record.model';
 import { IStatsFlowResponse } from '../interfaces/stats-flow-response.interface';
 import { IStatsTotalResponse } from '../interfaces/stats-total-response.interface';
@@ -82,7 +82,6 @@ export class StatsService {
     return this._records;
   }
 
-  // get raw data
   public get rawData(): any {
     return this._rawData;
   }
