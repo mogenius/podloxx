@@ -48,6 +48,9 @@ podloxx start
 ## How does it work? What does it do?
 XXX Explain architecture
 
+## Configuration
+INTERFACE_PREFIX, azv, veth, cali
+
 ## API
 XXX 
 
