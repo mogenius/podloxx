@@ -8,3 +8,5 @@ build-push-ghcr.sh
 franky-info.txt
 
 env/local.env
+
+node_modules
