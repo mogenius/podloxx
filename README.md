@@ -1,7 +1,9 @@
-![podloxx: Skinny Kubernetes Traffic Viewer (including local traffic, in style)](ui/src/assets/logos/logo-horizontal.svg)
+<img src="ui/src/assets/logos/logo-horizontal.svg" alt="drawing" width="500"/>
+<br />
+<br />
+<br />
 
-
-# podlox: Skinny Kubernetes Traffic Viewer (including local traffic)
+# podlox: Skinny Kubernetes Traffic Viewer<br /> (including local traffic)
 
 <p align="center">
     <a href="https://github.com/mogenius/podloxx/blob/main/LICENSE">
@@ -21,17 +23,25 @@
     </a>
 </p>
 
+<p align="center">
+  <img src="assets/screenshot1.png" alt="drawing" width="800"/>
+</p>
+<br />
+<br />
+
 # TOC
-- What is podloxx?
-- Installation
-- How does it work? What does it do?
-- API
-- Known Issues
-- 
-- Thanks
+- [What is podloxx?](#what-is-podloxx)
+- [Installation](#installation)
+- [How does it work? What does it do?](#how-does-it-work-what-does-it-do)
+- [Configuration](#configuration)
+- [API](#api)
+- [Roadmap](#roadmap)
+- [Known Issues](#known-issues)
+- [Thanks](#thanks)
 
 ## What is podloxx?
-XXX
+podloxx is a easy to use cluster daemonset and frontend application to monitor the ongoing traffic of your cluster in real-time. The monitoring happens in real-time and the display happens every few seconds (for perfromance reasons).
+The most important goal was to tell local and external traffic appart. This allows you to identify high traffic applications and see how is communicating with the outside world a lot. This even works with slim containers :-)
 
 ## Installation
 Just download it and run it. Don't forget to set the right cluster using kubectx or whatever tool you prefer.
@@ -52,6 +62,9 @@ XXX Explain architecture
 INTERFACE_PREFIX, azv, veth, cali
 
 ## API
+XXX 
+
+## Roadmap
 XXX 
 
 ## Known Issues
