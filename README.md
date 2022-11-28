@@ -1,8 +1,7 @@
+<p align="center">
 <img src="ui/src/assets/logos/logo-horizontal.svg" alt="drawing" width="500"/>
-<br />
-<br />
-<br />
-
+    </p>
+    
 # podlox: Skinny Kubernetes Traffic Viewer<br /> (including local traffic)
 
 <p align="center">
