@@ -99,6 +99,12 @@ podloxx start --interface-prefix azv|veth|cali
 | Azure         | Azure CNI   |       azv |    👍 |
 | Azure         | -           |      veth |    👍 |
 | Azure         | Calico      |      cali |    👍 |
+| AWS           | CNI         |       - |      ❓ |
+| AWS           | -           |       - |      ❓ |
+| AWS           | Calico      |       - |      ❓ |
+| Google Cloud  | CNI         |       - |      ❓ |
+| Google Cloud  | -           |       - |      ❓ |
+| Google Cloud  | Calico      |       - |      ❓ |
 
 If you have tested a different configuration: let us know what works :-)
 
