@@ -2,7 +2,7 @@
 <img src="ui/src/assets/logos/logo-horizontal.svg" alt="drawing" width="500"/>
     </p>
     
-# podlox: Skinny Kubernetes Traffic Viewer<br /> (including local traffic)
+# podloxx: Skinny Kubernetes Traffic Viewer<br /> (including local traffic)
 
 <p align="center">
     <a href="https://github.com/mogenius/podloxx/blob/main/LICENSE">
@@ -71,3 +71,6 @@ TODO
 
 ## Thanks 
 We took great inspiration (and some lines of code) from [Mizu](https://github.com/up9inc/mizu). Awesome work from the folks at [UP9](https://up9.com/).
+
+## About mogenius
+mogenius provides an automated cloud infrastructure that allows scaling applications on Kubernetes with a user friendly UI and API. 
