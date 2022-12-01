@@ -92,7 +92,7 @@ podloxx clean
 # Configuration
 To support multiple CNI configurations we provide a parameter for setup "--interface-prefix"
 ```
-podloxx start --interface-prefix azv|veth|cali
+podloxx start --interface-prefix azv|veth|cali|eni
 ```
 
 | Provider      | CNI         | Prefix    | Tested|
@@ -100,7 +100,7 @@ podloxx start --interface-prefix azv|veth|cali
 | Azure         | Azure CNI   |       azv |    👍 |
 | Azure         | -           |      veth |    👍 |
 | Azure         | Calico      |      cali |    👍 |
-| AWS           | CNI         |       - |      ❓ |
+| AWS           | CNI         |       eni |    👍 |
 | AWS           | -           |       - |      ❓ |
 | AWS           | Calico      |       - |      ❓ |
 | Google Cloud  | CNI         |       - |      ❓ |
