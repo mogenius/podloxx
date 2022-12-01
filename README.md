@@ -55,19 +55,19 @@ podloxx start
 ```
 
 ## How does it work? What does it do?
-XXX Explain architecture
+TODO Explain architecture
 
 ## Configuration
 INTERFACE_PREFIX, azv, veth, cali
 
 ## API
-XXX 
+TODO
 
 ## Roadmap
-XXX 
+TODO 
 
 ## Known Issues
-XXX
+TODO
 
 ## Thanks 
 We took great inspiration (and some lines of code) from [Mizu](https://github.com/up9inc/mizu). Awesome work from the folks at [UP9](https://up9.com/).
