@@ -45,7 +45,7 @@ The most important goal was to tell local and external traffic appart. This allo
 ## Installation
 Just download it and run it. Don't forget to set the right cluster using kubectx or whatever tool you prefer.
 
-### Download
+### Download podloxx
 ```
 curl -Lo podloxx \
 https://github.com/mogenius/podlox/releases/download/s/podloxx-1.0.2-darwin-arm64 \
