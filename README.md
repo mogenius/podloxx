@@ -1,6 +1,8 @@
 <p align="center">
-<img src="ui/src/assets/logos/logo-horizontal.svg" alt="drawing" width="500"/>
-    </p>
+  <img src="ui/src/assets/logos/logo-horizontal.svg" alt="drawing" width="500"/>
+</p>
+
+# podloxx: Skinny Kubernetes Traffic Viewer<br /> (including local traffic)
 
 <p align="center">
     <a href="https://github.com/mogenius/podloxx/blob/main/LICENSE">
@@ -43,6 +45,7 @@ Podloxx is a leight-weight Kubernetes traffic monitoring tool that can be deploy
 Just download it and run it. Don't forget to set the right cluster using kubectx or whatever tool you prefer.
 
 ## Mac
+### Download podloxx
 ```
 curl -Lo podloxx https://github.com/mogenius/podloxx/releases/download/v1.0.11/podloxx-1.0.11-darwin-arm64 && chmod 755 podloxx
 
@@ -62,7 +65,6 @@ podloxx start
 ```
 
 ⚠️ ⚠️ ⚠️ IMPORTANT: be sure to select the right context before running podloxx ⚠️⚠️⚠️
-
 ```
 podloxx start
 ```
@@ -126,3 +128,17 @@ XXX
 We took great inspiration (and some lines of code) from [Mizu](https://github.com/up9inc/mizu).</br>
 Awesome work from the folks at [UP9](https://up9.com/).</br>
 Notice: The project has been renamed to Kubeshark and moved to https://github.com/kubeshark/kubeshark.</br>
+# API
+TODO
+
+# Roadmap
+TODO 
+
+# Known Issues
+TODO
+
+# Thanks 
+We took great inspiration (and some lines of code) from [Mizu](https://github.com/up9inc/mizu). Awesome work from the folks at [UP9](https://up9.com/).
+
+# About mogenius
+mogenius provides an automated cloud infrastructure that allows scaling applications on Kubernetes with a user friendly UI and API. 
