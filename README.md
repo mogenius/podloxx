@@ -45,7 +45,6 @@ Podloxx is a leight-weight Kubernetes traffic monitoring tool that can be deploy
 Just download it and run it. Don't forget to set the right cluster using kubectx or whatever tool you prefer.
 
 ## Mac
-### Download podloxx
 ```
 curl -Lo podloxx https://github.com/mogenius/podloxx/releases/download/v1.0.11/podloxx-1.0.11-darwin-arm64 && chmod 755 podloxx
 
