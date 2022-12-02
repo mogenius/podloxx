@@ -49,24 +49,24 @@ Just download it and run it. Don't forget to set the right cluster using kubectx
 ```
 curl -Lo podloxx https://github.com/mogenius/podloxx/releases/download/v1.0.11/podloxx-1.0.11-darwin-arm64 && chmod 755 podloxx
 
-podloxx start
+./podloxx start
 ```
 ## Linux
 ```
 curl -Lo podloxx https://github.com/mogenius/podloxx/releases/download/v1.0.11/podloxx-1.0.11-linux-amd64 && chmod 755 podloxx
 
-podloxx start
+./podloxx start
 ```
 ## Windows
 ```
 curl -Lo podloxx https://github.com/mogenius/podloxx/releases/download/v1.0.11/podloxx-1.0.11-win-amd64 && chmod 755 podloxx
 
-podloxx start
+./podloxx start
 ```
 
 ⚠️ ⚠️ ⚠️ IMPORTANT: be sure to select the right context before running podloxx ⚠️⚠️⚠️
 ```
-podloxx start
+./podloxx start
 ```
 
 # How does Podloxx work?
@@ -86,13 +86,13 @@ As soon as you close the cli app (CTRL + C) the application will be removed from
 
 To completely remove Podloxx from your cluster run:
 ```
-podloxx clean
+./podloxx clean
 ```
 
 # Configuration
 To support multiple CNI configurations we provide a parameter for setup "--interface-prefix"
 ```
-podloxx start --interface-prefix azv|veth|cali
+./podloxx start --interface-prefix azv|veth|cali
 ```
 
 | Provider      | CNI         | Prefix    | Tested|
