@@ -67,6 +67,7 @@ func InitApiCluster() {
 }
 
 func initGin() {
+	//gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 	config := cors.DefaultConfig()
 	config.AllowAllOrigins = true
