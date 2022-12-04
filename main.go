@@ -13,10 +13,14 @@ import (
 //go:embed ui/dist/podloxx/*
 var htmlDirFs embed.FS
 
+//go:embed .env/production.env
+var defaultEnvFile string
+
 func main() {
+	utils.DefaultEnvFile = defaultEnvFile
+	api.HtmlDirFs = htmlDirFs
 	logger.Init()
 	utils.LoadDotEnv()
-	api.HtmlDirFs = htmlDirFs
 	network.Init()
 	cmd.Execute()
 }
