@@ -2,8 +2,6 @@
   <img src="ui/src/assets/logos/logo-horizontal.svg" alt="drawing" width="500"/>
 </p>
 
-# podloxx: Skinny Kubernetes Traffic Viewer<br /> (including local traffic)
-
 <p align="center">
     <a href="https://github.com/mogenius/podloxx/blob/main/LICENSE">
         <img alt="GitHub License" src="https://img.shields.io/github/license/mogenius/podloxx?logo=GitHub&style=flat-square">
@@ -28,13 +26,13 @@
 <br />
 <br />
 
+> :warning: **Podloxx is not yet publicly released. The current version will likely fail on your machine and we're working on an update.**
+
 # Table of contents
-- [What is podloxx?](#what-is-podloxx)
+- [What is Podloxx?](#what-is-podloxx)
 - [Installation](#installation)
-- [How does it work? What does it do?](#how-does-it-work-what-does-it-do)
+- [How does Podloxx work?](#how-does-podloxx-work)
 - [Configuration](#configuration)
-- [API](#api)
-- [Roadmap](#roadmap)
 - [Known Issues](#known-issues)
 - [Credits](#credits)
 
@@ -116,9 +114,6 @@ http://127.0.0.1:1337/traffic/total
 http://127.0.0.1:1337/traffic/flow
 ```
 
-# Roadmap
-XXX 
-
 # Known Issues
 - Sometimes port forwarding doesn't get established and Podloxx doesn't recognize it.
 - Depending on your cloud provider your INTERFACE_PREFIX might be different. If you encounter a different interface please report its name to us so we can improve the list above.
@@ -127,17 +122,6 @@ XXX
 We took great inspiration (and some lines of code) from [Mizu](https://github.com/up9inc/mizu).</br>
 Awesome work from the folks at [UP9](https://up9.com/).</br>
 Notice: The project has been renamed to Kubeshark and moved to https://github.com/kubeshark/kubeshark.</br>
-# API
-TODO
 
-# Roadmap
-TODO 
-
-# Known Issues
-TODO
-
-# Thanks 
-We took great inspiration (and some lines of code) from [Mizu](https://github.com/up9inc/mizu). Awesome work from the folks at [UP9](https://up9.com/).
-
-# About mogenius
-mogenius provides an automated cloud infrastructure that allows scaling applications on Kubernetes with a user friendly UI and API. 
+---------------------
+Podloxx was created by [mogenius](https://mogenius.com) - The Virtual DevOps platform
