@@ -5,8 +5,9 @@ import (
 	"fmt"
 	"net"
 	"os"
-	"podloxx-collector/kubernetes"
-	"podloxx-collector/structs"
+	"podloxx/kubernetes"
+	"podloxx/logger"
+	"podloxx/structs"
 	"regexp"
 	"sort"
 	"strconv"
@@ -14,9 +15,9 @@ import (
 	"sync"
 	"time"
 
+	"podloxx/utils"
+
 	"github.com/go-redis/redis"
-	"github.com/mogenius/mo-go/logger"
-	"github.com/mogenius/mo-go/utils"
 	"golang.org/x/exp/maps"
 
 	"github.com/google/gopacket"

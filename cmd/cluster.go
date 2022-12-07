@@ -4,8 +4,8 @@ Copyright © 2022 mogenius, Benedikt Iltisberger
 package cmd
 
 import (
-	"podloxx-collector/api"
-	"podloxx-collector/network"
+	"podloxx/api"
+	"podloxx/network"
 
 	"github.com/spf13/cobra"
 )

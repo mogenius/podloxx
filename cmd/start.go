@@ -7,12 +7,13 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
-	"podloxx-collector/api"
-	"podloxx-collector/kubernetes"
+	"podloxx/api"
+	"podloxx/kubernetes"
 	"syscall"
 
-	"github.com/mogenius/mo-go/logger"
-	"github.com/mogenius/mo-go/utils"
+	"podloxx/logger"
+	"podloxx/utils"
+
 	"github.com/spf13/cobra"
 )
 

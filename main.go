@@ -2,12 +2,11 @@ package main
 
 import (
 	"embed"
-	"podloxx-collector/api"
-	"podloxx-collector/cmd"
-	"podloxx-collector/network"
-	"podloxx-collector/utils"
-
-	"github.com/mogenius/mo-go/logger"
+	"podloxx/api"
+	"podloxx/cmd"
+	"podloxx/logger"
+	"podloxx/network"
+	"podloxx/utils"
 )
 
 //go:embed ui/dist/podloxx/*

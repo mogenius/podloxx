@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/mogenius/mo-go/logger"
+	"podloxx/logger"
 
 	core "k8s.io/api/core/v1"
 	v1 "k8s.io/api/core/v1"

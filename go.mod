@@ -1,4 +1,4 @@
-module podloxx-collector
+module podloxx
 
 go 1.19
 
@@ -12,8 +12,7 @@ require (
 	github.com/gorilla/websocket v1.5.0
 	github.com/jedib0t/go-pretty/v6 v6.3.9
 	github.com/joho/godotenv v1.4.0
-	github.com/mogenius/mo-go/logger v0.0.0-20220930121109-bfea4bb13071
-	github.com/mogenius/mo-go/utils v0.0.0-20220930121109-bfea4bb13071
+	github.com/op/go-logging v0.0.0-20160315200505-970db520ece7
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.5.0
 	golang.org/x/exp v0.0.0-20220929160808-de9c53c655b9
@@ -38,7 +37,6 @@ require (
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/gnostic v0.6.9 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
-	github.com/google/uuid v1.3.0 // indirect
 	github.com/imdario/mergo v0.3.13 // indirect
 	github.com/inconshreveable/mousetrap v1.0.1 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
@@ -52,7 +50,6 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/onsi/ginkgo v1.16.5 // indirect
-	github.com/op/go-logging v0.0.0-20160315200505-970db520ece7 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.5 // indirect
 	github.com/rivo/uniseg v0.4.2 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect

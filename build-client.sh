@@ -50,10 +50,10 @@ go mod download
 
 go build -ldflags="-extldflags= \
   -s -w \
-  -X 'podloxx-collector/version.GitCommitHash=${COMMIT_HASH}' \
-  -X 'podloxx-collector/version.Branch=${GIT_BRANCH}' \
-  -X 'podloxx-collector/version.BuildTimestamp=${BUILD_TIMESTAMP}' \
-  -X 'podloxx-collector/version.Ver=${NEXT_VERSION}'" -o $filename .
+  -X 'podloxx/version.GitCommitHash=${COMMIT_HASH}' \
+  -X 'podloxx/version.Branch=${GIT_BRANCH}' \
+  -X 'podloxx/version.BuildTimestamp=${BUILD_TIMESTAMP}' \
+  -X 'podloxx/version.Ver=${NEXT_VERSION}'" -o $filename .
 
 # Define variables.
 GH_API="https://api.github.com"

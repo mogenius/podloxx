@@ -8,15 +8,16 @@ import (
 	"os/exec"
 	"path"
 	"path/filepath"
-	"podloxx-collector/kubernetes"
-	"podloxx-collector/structs"
+	"podloxx/kubernetes"
+	"podloxx/logger"
+	"podloxx/structs"
 	"runtime"
 	"strings"
 
+	"podloxx/utils"
+
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/pcap"
-	"github.com/mogenius/mo-go/logger"
-	"github.com/mogenius/mo-go/utils"
 	"github.com/pkg/errors"
 	v1 "k8s.io/api/core/v1"
 )

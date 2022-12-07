@@ -35,10 +35,10 @@ RUN go mod download
 COPY . .
 
 RUN CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -ldflags="-extldflags= \
-  -X 'podloxx-collector/version.GitCommitHash=${COMMIT_HASH}' \
-  -X 'podloxx-collector/version.Branch=${GIT_BRANCH}' \
-  -X 'podloxx-collector/version.BuildTimestamp=${BUILD_TIMESTAMP}' \
-  -X 'podloxx-collector/version.Ver=${NEXT_VERSION}'" -o bin/podloxx .
+  -X 'podloxx/version.GitCommitHash=${COMMIT_HASH}' \
+  -X 'podloxx/version.Branch=${GIT_BRANCH}' \
+  -X 'podloxx/version.BuildTimestamp=${BUILD_TIMESTAMP}' \
+  -X 'podloxx/version.Ver=${NEXT_VERSION}'" -o bin/podloxx .
 
 
 FROM alpine:latest

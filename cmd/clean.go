@@ -4,7 +4,7 @@ Copyright © 2022 mogenius, Benedikt Iltisberger
 package cmd
 
 import (
-	"podloxx-collector/kubernetes"
+	"podloxx/kubernetes"
 
 	"github.com/spf13/cobra"
 )
