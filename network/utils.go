@@ -99,10 +99,10 @@ func getVethIndex(pid uint32) (string, error) {
 }
 
 // Get the virtual host interface name from the index provided in the containers network namespace
-func getVethInterfaceForIndex(index string, interfacePrefix string) (string, error) {
+func getVethInterfaceForIndex(index string) (string, error) {
 	switch runtime.GOOS {
 	case "darwin", "linux":
-		var cmdStr string = fmt.Sprintf(`ip -o link | grep ^%s: | sed -n -e 's/.*\(%s[[:alnum:]]*\)@.*/\1/p'`, index, interfacePrefix)
+		var cmdStr string = fmt.Sprintf(`ip -o link | grep ^%s: | sed -n -e 's/.* \([[:alnum:]]*\)@.*/\1/p'`, index)
 		cmd := exec.Command("bash", "-c", cmdStr)
 		out, err := cmd.CombinedOutput()
 		if err != nil {

@@ -3,7 +3,7 @@ set -e
 
 CR_HOST=ghcr.io
 OWNER=mogenius
-NAME=podloxx-collector
+NAME=podloxx
 GIT_BRANCH=$(git branch | grep \* | cut -d ' ' -f2 | tr '[:upper:]' '[:lower:]')
 NEXT_VERSION=1.0.2
 COMMIT_HASH=$(git rev-parse --short HEAD)

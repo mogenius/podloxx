@@ -86,23 +86,19 @@ To completely remove Podloxx from your cluster run:
 ./podloxx clean
 ```
 
-# Configuration
-To support multiple CNI configurations we provide a parameter for setup "--interface-prefix"
-```
-podloxx start --interface-prefix azv|veth|cali|e
-```
+# TESTED WITH
+We already checked multiple CNI configurations.
 
-| Provider      | CNI         | Prefix    | Tested|
-| ------------- |:----------- |:---------:| -----:|
-| Azure         | Azure CNI   |       azv |    👍 |
-| Azure         | -           |      veth |    👍 |
-| Azure         | Calico      |      cali |    👍 |
-| AWS           | CNI         |       eni |    👍 |
-| AWS           | -           |       - |      ❓ |
-| AWS           | Calico      |       - |      ❓ |
-| Google Cloud  | CNI         |       - |      ❓ |
-| Google Cloud  | -           |       - |      ❓ |
-| Google Cloud  | Calico      |       - |      ❓ |
+| Provider      | CNI         | Prefix    | K8S    | Tested|
+| ------------- |:----------- |:---------:|:---------:| -----:|
+| Azure         | Azure CNI   |       azv | 1.24.X, 1.23.x, 1.22.x |    👍 |
+| Azure         | -           |      veth | 1.24.X, 1.23.x, 1.22.x |    👍 |
+| Azure         | Calico      |      cali | 1.24.X, 1.23.x, 1.22.x |    👍 |
+| DigitalOcean  | Cillium     |       lxc | 1.25.X                 |    💥 |
+| AWS           | CNI         |       eni | 1.24.X, 1.23.x, 1.22.x |    👍 |
+| AWS           | -           |       - |         - |      ❓ |
+| AWS           | Calico      |       - |         - |      ❓ |
+| Google Cloud  | CNI         |       - |         - |      ❓ |
 
 If you have tested additional configurations: Let us know what works :-)
 
