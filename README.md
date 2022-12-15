@@ -94,13 +94,14 @@ We already checked multiple CNI configurations.
 | Azure         | Azure CNI   |       azv | 1.24.X, 1.23.x, 1.22.x |    👍 |
 | Azure         | -           |      veth | 1.24.X, 1.23.x, 1.22.x |    👍 |
 | Azure         | Calico      |      cali | 1.24.X, 1.23.x, 1.22.x |    👍 |
-| DigitalOcean  | Cillium     |       lxc | 1.25.X                 |    💥 |
+| DigitalOcean  | Cillium     |       lxc | 1.24.X, 1.23.X         |    👍 |
 | AWS           | CNI         |       eni | 1.24.X, 1.23.x, 1.22.x |    👍 |
 | AWS           | -           |       - |         - |      ❓ |
 | AWS           | Calico      |       - |         - |      ❓ |
 | Google Cloud  | CNI         |       - |         - |      ❓ |
 
 If you have tested additional configurations: Let us know what works :-)
+💥: 1.25.X is not yet supported (at least we saw a problem with Digital Ocean) because the CONFIG_CGROUP_PIDS flag is disabled by default.
 
 # API
 You can use following API endpoints to access the raw data:
