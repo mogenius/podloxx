@@ -44,16 +44,17 @@ Just download it and run it. Don't forget to set the right cluster using kubectx
 
 ## Mac
 ```
-curl -Lo podloxx https://github.com/mogenius/podloxx/releases/download/v1.0.11/podloxx-1.0.11-darwin-arm64 && chmod 755 podloxx
+curl -Lo podloxx https://github.com/mogenius/podloxx/releases/download/v1.0.2/podloxx-1.0.2-darwin-amd64 && chmod 755 podloxx
 
 ./podloxx start
 ```
 ## Linux
 ```
-curl -Lo podloxx https://github.com/mogenius/podloxx/releases/download/v1.0.11/podloxx-1.0.11-linux-amd64 && chmod 755 podloxx
+curl -Lo podloxx https://github.com/mogenius/podloxx/releases/download/v1.0.2/podloxx-1.0.2-linux-amd64 && chmod 755 podloxx
 
 ./podloxx start
 ```
+<!--
 ## Windows
 ```
 curl -Lo podloxx https://github.com/mogenius/podloxx/releases/download/v1.0.11/podloxx-1.0.11-win-amd64 && chmod 755 podloxx
@@ -65,6 +66,7 @@ curl -Lo podloxx https://github.com/mogenius/podloxx/releases/download/v1.0.11/p
 ```
 ./podloxx start
 ```
+--> 
 
 # How does Podloxx work?
 Podloxx will run a series of tasks in order to run within your cluster. Here's what happens in detail once you launch Podloxx:
