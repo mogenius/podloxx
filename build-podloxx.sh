@@ -9,6 +9,7 @@ npm --force i
 npm run build
 
 cd ${dir}/
+mkdir ${dir}/bin
 
 echo "Build podloxx"
 go mod download
