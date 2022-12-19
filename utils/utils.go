@@ -24,7 +24,7 @@ func LoadDotEnv() {
 
 	passwordStrList := []string{"PWD", "PASSWORD"}
 	var stage string = "local"
-	if len(os.Args) > 0 {
+	if len(os.Args) > 1 {
 		stage = os.Args[1]
 	}
 	if os.Getenv("STAGE") != "" {
