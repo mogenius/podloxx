@@ -74,6 +74,7 @@ podloxx_link=$(curl -s https://api.github.com/repos/mogenius/podloxx/releases/la
 curl -s -L -o podloxx ${podloxx_link}
 
 chmod 755 podloxx
+
 ```
 
 ⚠️ ⚠️ ⚠️ IMPORTANT: be sure to select the right context before running podloxx ⚠️⚠️⚠️
