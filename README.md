@@ -26,7 +26,7 @@
 <br />
 <br />
 
-> :warning: **Podloxx is not yet publicly released. The current version will likely fail on your machine and we're working on an update.**
+> :warning: **This is the first public Podloxx release. If you experience issues we are very happy about your feedback or contribution.**
 
 # Table of contents
 - [What is Podloxx?](#what-is-podloxx)
@@ -44,6 +44,7 @@ Just download it and run it. Don't forget to set the right cluster using kubectx
 
 ## Mac
 ```
+
 podloxx_link=$(curl -s https://api.github.com/repos/mogenius/podloxx/releases/latest | grep browser_download_url | cut -d '"' -f 4 | grep darwin  )
 
 curl -s -L -o podloxx ${podloxx_link}
@@ -52,8 +53,10 @@ chmod 755 podloxx
 
 ./podloxx start
 ```
+
 ## Linux
 ```
+
 podloxx_link=$(curl -s https://api.github.com/repos/mogenius/podloxx/releases/latest | grep browser_download_url | cut -d '"' -f 4 | grep linux )
 
 curl -s -L -o podloxx ${podloxx_link}
@@ -71,12 +74,13 @@ podloxx_link=$(curl -s https://api.github.com/repos/mogenius/podloxx/releases/la
 curl -s -L -o podloxx ${podloxx_link}
 
 chmod 755 podloxx
-
-./podloxx start
 ```
 
 ⚠️ ⚠️ ⚠️ IMPORTANT: be sure to select the right context before running podloxx ⚠️⚠️⚠️
 
+```
+./podloxx start
+```
 
 # How does Podloxx work?
 Podloxx will run a series of tasks in order to run within your cluster. Here's what happens in detail once you launch Podloxx:
