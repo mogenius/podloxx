@@ -129,8 +129,7 @@ http://127.0.0.1:1337/traffic/flow
 ```
 
 # Known Issues
-- Sometimes port forwarding doesn't get established and Podloxx doesn't recognize it.
-- Depending on your cloud provider your INTERFACE_PREFIX might be different. If you encounter a different interface please report its name to us so we can improve the list above.
+- Sometimes port forwarding doesn't get established and Podloxx doesn't recognize it. Please just hit CTRL + C to recover from this state.
 
 # Credits
 We took great inspiration (and some lines of code) from [Mizu](https://github.com/up9inc/mizu).</br>

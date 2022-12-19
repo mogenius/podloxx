@@ -20,7 +20,7 @@ import (
 // startCmd represents the start command
 var startCmd = &cobra.Command{
 	Use:   "start",
-	Short: "Run the application within your currently selected kubernetes context.",
+	Short: "🚀🚀🚀 Run the application within your currently selected kubernetes context. 🚀🚀🚀",
 	Long: `
 	Run the application within your currently selected kubernetes context.
 	App will cleanup after being terminated with CTRL+C automatically.`,
