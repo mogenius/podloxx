@@ -44,29 +44,39 @@ Just download it and run it. Don't forget to set the right cluster using kubectx
 
 ## Mac
 ```
-curl -Lo podloxx https://github.com/mogenius/podloxx/releases/download/v1.0.2/podloxx-1.0.2-darwin-amd64 && chmod 755 podloxx
+podloxx_link=$(curl -s https://api.github.com/repos/mogenius/podloxx/releases/latest | grep browser_download_url | cut -d '"' -f 4 | grep darwin  )
+
+curl -s -L -o podloxx ${podloxx_link}
+
+chmod 755 podloxx
 
 ./podloxx start
 ```
 ## Linux
 ```
-curl -Lo podloxx https://github.com/mogenius/podloxx/releases/download/v1.0.2/podloxx-1.0.2-linux-amd64 && chmod 755 podloxx
+podloxx_link=$(curl -s https://api.github.com/repos/mogenius/podloxx/releases/latest | grep browser_download_url | cut -d '"' -f 4 | grep linux )
+
+curl -s -L -o podloxx ${podloxx_link}
+
+chmod 755 podloxx
 
 ./podloxx start
 ```
-<!--
+
 ## Windows
 ```
-curl -Lo podloxx https://github.com/mogenius/podloxx/releases/download/v1.0.11/podloxx-1.0.11-win-amd64 && chmod 755 podloxx
+
+podloxx_link=$(curl -s https://api.github.com/repos/mogenius/podloxx/releases/latest | grep browser_download_url | cut -d '"' -f 4 | grep windows )
+
+curl -s -L -o podloxx ${podloxx_link}
+
+chmod 755 podloxx
 
 ./podloxx start
 ```
 
 ⚠️ ⚠️ ⚠️ IMPORTANT: be sure to select the right context before running podloxx ⚠️⚠️⚠️
-```
-./podloxx start
-```
---> 
+
 
 # How does Podloxx work?
 Podloxx will run a series of tasks in order to run within your cluster. Here's what happens in detail once you launch Podloxx:
@@ -81,7 +91,7 @@ Podloxx will run a series of tasks in order to run within your cluster. Here's w
 
 In other words: The DaemonSet will inspect all packages of the node (using special deployment capabilities). The data will be captured, summarized and sent to the redis (using certain thresholds). The local web app will gather the data from the redis periodically and display the data inside the web application.
 
-As soon as you close the cli app (CTRL + C) the application will be removed from your cluster and the UI will stop receiving updates. When you restart it, it will resume gathering data without storing a state (meaning you start from 0). 
+As soon as you close the cli app (CTRL + C) the application will be removed from your cluster and the UI will stop receiving updates. When you restart it, it will resume gathering data without storing a state (meaning you start from 0).
 
 To completely remove Podloxx from your cluster run:
 ```
@@ -117,7 +127,7 @@ http://127.0.0.1:1337/traffic/flow
 - Sometimes port forwarding doesn't get established and Podloxx doesn't recognize it.
 - Depending on your cloud provider your INTERFACE_PREFIX might be different. If you encounter a different interface please report its name to us so we can improve the list above.
 
-# Credits 
+# Credits
 We took great inspiration (and some lines of code) from [Mizu](https://github.com/up9inc/mizu).</br>
 Awesome work from the folks at [UP9](https://up9.com/).</br>
 Notice: The project has been renamed to Kubeshark and moved to https://github.com/kubeshark/kubeshark.</br>
