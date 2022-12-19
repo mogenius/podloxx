@@ -11,5 +11,6 @@ franky-info.txt
 env/local.env
 
 node_modules
+ui/package-lock.json
 podloxx
 ui/dist
