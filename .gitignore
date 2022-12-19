@@ -2,6 +2,7 @@ tmp
 bin
 
 build-push-ghcr.sh
+build-client.sh
 
 .DS_Store
 
