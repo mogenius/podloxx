@@ -44,6 +44,7 @@ Just download it and run it. Don't forget to set the right cluster using kubectx
 
 ## Mac
 ```
+
 podloxx_link=$(curl -s https://api.github.com/repos/mogenius/podloxx/releases/latest | grep browser_download_url | cut -d '"' -f 4 | grep darwin  )
 
 curl -s -L -o podloxx ${podloxx_link}
@@ -52,8 +53,10 @@ chmod 755 podloxx
 
 ./podloxx start
 ```
+
 ## Linux
 ```
+
 podloxx_link=$(curl -s https://api.github.com/repos/mogenius/podloxx/releases/latest | grep browser_download_url | cut -d '"' -f 4 | grep linux )
 
 curl -s -L -o podloxx ${podloxx_link}
