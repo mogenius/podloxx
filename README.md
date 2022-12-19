@@ -69,8 +69,8 @@ chmod 755 podloxx
 ## Windows
 ```
 
-curl.exe -LO "https://github.com/mogenius/podloxx/releases/download/v1.0.3/podloxx-1.0.3-windows-amd64"
-podloxx-1.0.3-windows-amd64 start
+curl.exe -LO "https://github.com/mogenius/podloxx/releases/download/v1.0.4/podloxx-1.0.4-windows-amd64"
+podloxx-1.0.4-windows-amd64 start
 
 ```
 
