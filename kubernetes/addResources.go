@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/mogenius/mo-go/logger"
+	"podloxx/logger"
 
 	core "k8s.io/api/core/v1"
 	v1 "k8s.io/api/core/v1"
@@ -115,7 +115,6 @@ func addDaemonSet(kubeProvider *KubeProvider) {
 	daemonsetContainer.WithImagePullPolicy(core.PullAlways)
 	daemonsetContainer.WithEnv(
 		applyconfcore.EnvVar().WithName("STAGE").WithValue(os.Getenv("STAGE")),
-		applyconfcore.EnvVar().WithName("INTERFACE_PREFIX").WithValue(os.Getenv("INTERFACE_PREFIX")),
 		applyconfcore.EnvVar().WithName("REDIS_SERVICE_NAME").WithValue(os.Getenv("REDIS_SERVICE_NAME")),
 		applyconfcore.EnvVar().WithName("REDIS_PORT").WithValue(os.Getenv("REDIS_PORT")),
 		applyconfcore.EnvVar().WithName("API_HOST").WithValue(os.Getenv("API_HOST")),

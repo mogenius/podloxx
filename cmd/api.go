@@ -6,11 +6,12 @@ package cmd
 import (
 	"os"
 	"os/signal"
-	"podloxx-collector/api"
+	"podloxx/api"
 	"syscall"
 
-	"github.com/mogenius/mo-go/logger"
-	"github.com/mogenius/mo-go/utils"
+	"podloxx/logger"
+	"podloxx/utils"
+
 	"github.com/spf13/cobra"
 )
 

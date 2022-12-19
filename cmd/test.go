@@ -3,13 +3,16 @@ Copyright © 2022 mogenius, Benedikt Iltisberger
 */
 package cmd
 
+// TODO: REMOVE THIS FILE
+
 import (
 	"os"
 	"os/signal"
-	"podloxx-collector/api"
+	"podloxx/api"
 	"syscall"
 
-	"github.com/mogenius/mo-go/logger"
+	"podloxx/logger"
+
 	"github.com/spf13/cobra"
 )
 
@@ -17,9 +20,7 @@ import (
 var testCmd = &cobra.Command{
 	Use:   "test",
 	Short: "Run the application within your currently selected kubernetes context.",
-	Long: `
-	Run the application within your currently selected kubernetes context.
-	App will cleanup after being terminated with CTRL+C automatically.`,
+	Long:  `TODO: REMOVE ME`,
 	Run: func(cmd *cobra.Command, args []string) {
 		api.TestRedis()
 

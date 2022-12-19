@@ -3,12 +3,13 @@ package utils
 import (
 	"fmt"
 	"os"
+	"os/exec"
+	"podloxx/logger"
+	"runtime"
 	"strings"
 	"unicode/utf8"
 
 	"github.com/joho/godotenv"
-	"github.com/mogenius/mo-go/logger"
-	"github.com/mogenius/mo-go/utils"
 )
 
 var DefaultEnvFile string
@@ -64,7 +65,7 @@ func LoadDotEnv() {
 	}
 
 	for key, element := range tes {
-		if utils.Contains(passwordStrList, strings.ToUpper(key)) {
+		if Contains(passwordStrList, strings.ToUpper(key)) {
 			if len(element) == 0 {
 				element = os.Getenv(key)
 			}
@@ -77,5 +78,33 @@ func LoadDotEnv() {
 		} else {
 			logger.Log.Notice("Key:", key, "=>", "Element:", element)
 		}
+	}
+}
+
+func Contains(s []string, str string) bool {
+	for _, v := range s {
+		if strings.Contains(str, v) {
+			return true
+		}
+	}
+	return false
+}
+
+func OpenBrowser(url string) {
+	var err error
+
+	switch runtime.GOOS {
+	case "linux":
+		err = exec.Command("xdg-open", url).Start()
+	case "windows":
+		err = exec.Command("rundll32", "url.dll,FileProtocolHandler", url).Start()
+	case "darwin":
+		err = exec.Command("open", url).Start()
+	default:
+		err = fmt.Errorf("unsupported platform")
+	}
+
+	if err != nil {
+		fmt.Errorf("error while opening browser, %v", err)
 	}
 }

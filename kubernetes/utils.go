@@ -2,7 +2,7 @@ package kubernetes
 
 import (
 	"path/filepath"
-	"podloxx-collector/version"
+	"podloxx/version"
 
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
@@ -13,7 +13,7 @@ import (
 var (
 	NAMESPACE              = "podloxx"
 	DAEMONSETNAME          = "podloxx"
-	DAEMONSETIMAGE         = "ghcr.io/mogenius/podloxx-collector:" + version.Ver
+	DAEMONSETIMAGE         = "ghcr.io/mogenius/podloxx:" + version.Ver
 	REDISNAME              = "podloxx-redis"
 	REDISSERVICENAME       = "podloxx-redis-service"
 	REDISIMAGE             = "redis:latest"

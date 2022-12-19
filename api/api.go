@@ -11,13 +11,14 @@ import (
 	"net/http"
 	"os"
 	"path"
-	"podloxx-collector/structs"
+	"podloxx/structs"
 	"time"
+
+	"podloxx/logger"
+	"podloxx/utils"
 
 	"github.com/go-redis/redis"
 	"github.com/gorilla/websocket"
-	"github.com/mogenius/mo-go/logger"
-	"github.com/mogenius/mo-go/utils"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"

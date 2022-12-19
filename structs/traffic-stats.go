@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"podloxx/logger"
 	"strconv"
 	"strings"
 	"unsafe"
 
 	"github.com/google/gopacket"
-	"github.com/mogenius/mo-go/logger"
 )
 
 const MAXCONNECTIONSSIZE int = 10

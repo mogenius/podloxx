@@ -4,8 +4,8 @@ Copyright © 2022 mogenius, Benedikt Iltisberger
 package cmd
 
 import (
-	"podloxx-collector/api"
-	"podloxx-collector/network"
+	"podloxx/api"
+	"podloxx/network"
 
 	"github.com/spf13/cobra"
 )
@@ -18,7 +18,7 @@ var clusterCmd = &cobra.Command{
 	Run the application on your cluster machine's network devices. 
 	Awesome hacker view window. Should always be visible to impress non-it-folks.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		go network.MonitorAll(false, "")
+		go network.MonitorAll(false)
 		api.InitApiCluster()
 	},
 }

@@ -3,7 +3,7 @@ package kubernetes
 import (
 	"context"
 
-	"github.com/mogenius/mo-go/logger"
+	"podloxx/logger"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )

@@ -5,8 +5,9 @@ import (
 	"fmt"
 	"net"
 	"os"
-	"podloxx-collector/kubernetes"
-	"podloxx-collector/structs"
+	"podloxx/kubernetes"
+	"podloxx/logger"
+	"podloxx/structs"
 	"regexp"
 	"sort"
 	"strconv"
@@ -14,9 +15,9 @@ import (
 	"sync"
 	"time"
 
+	"podloxx/utils"
+
 	"github.com/go-redis/redis"
-	"github.com/mogenius/mo-go/logger"
-	"github.com/mogenius/mo-go/utils"
 	"golang.org/x/exp/maps"
 
 	"github.com/google/gopacket"
@@ -50,22 +51,16 @@ var httpRequestCount uint64 = 0
 var APIHOST string
 var APIPORT string
 var APIKEY string
-var INTERFACEPREFIX string
 
 var redisClient *redis.Client
 
 func Init() {
 	APIHOST = os.Getenv("API_HOST")
 	APIPORT = os.Getenv("API_PORT")
-	INTERFACEPREFIX = os.Getenv("INTERFACE_PREFIX")
 }
 
-func MonitorAll(useLocalKubeConfig bool, overwriteInterfacePrefix string) {
+func MonitorAll(useLocalKubeConfig bool) {
 	initRedis()
-
-	if overwriteInterfacePrefix != "" {
-		INTERFACEPREFIX = overwriteInterfacePrefix
-	}
 
 	ingressIps = kubernetes.GetIngressControllerIps(false)
 
@@ -421,7 +416,7 @@ func tapInterface(containerId string, pod v1.Pod) error {
 			}
 			return fmt.Errorf("GetVethIndex (%s): %s", pod.Name, err.Error())
 		}
-		vethName, err := getVethInterfaceForIndex(index, INTERFACEPREFIX)
+		vethName, err := getVethInterfaceForIndex(index)
 		if err != nil {
 			if strings.Contains(err.Error(), "exit status 2") {
 				cleanBecauseOfErrors(pid, pod)
