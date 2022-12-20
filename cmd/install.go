@@ -4,8 +4,12 @@ Copyright © 2022 mogenius, Benedikt Iltisberger
 package cmd
 
 import (
+	"fmt"
+	"os"
 	"podloxx/kubernetes"
+	"podloxx/utils"
 
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
@@ -17,6 +21,11 @@ var installCmd = &cobra.Command{
 	This cmd installs the application permanently into you cluster. 
 	Please run cleanup if you want to remove it again.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		yellow := color.New(color.FgYellow).SprintFunc()
+		if !utils.ConfirmTask(fmt.Sprintf("Do you realy want to install podloxx to '%s' context?", yellow(kubernetes.CurrentContextName())), 1) {
+			os.Exit(0)
+		}
+
 		kubernetes.Deploy()
 	},
 }

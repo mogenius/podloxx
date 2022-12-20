@@ -1,7 +1,9 @@
 package utils
 
 import (
+	"bufio"
 	"fmt"
+	"log"
 	"os"
 	"os/exec"
 	"podloxx/logger"
@@ -107,4 +109,26 @@ func OpenBrowser(url string) {
 	if err != nil {
 		fmt.Errorf("error while opening browser, %v", err)
 	}
+}
+
+func ConfirmTask(s string, tries int) bool {
+	r := bufio.NewReader(os.Stdin)
+
+	for ; tries > 0; tries-- {
+		fmt.Printf("%s [y/n]: ", s)
+
+		res, err := r.ReadString('\n')
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		// Empty input (i.e. "\n")
+		if len(res) < 2 {
+			continue
+		}
+
+		return strings.ToLower(strings.TrimSpace(res))[0] == 'y'
+	}
+
+	return false
 }

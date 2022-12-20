@@ -14,6 +14,7 @@ import (
 	"podloxx/logger"
 	"podloxx/utils"
 
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
@@ -25,6 +26,11 @@ var startCmd = &cobra.Command{
 	Run the application within your currently selected kubernetes context.
 	App will cleanup after being terminated with CTRL+C automatically.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		yellow := color.New(color.FgYellow).SprintFunc()
+		if !utils.ConfirmTask(fmt.Sprintf("Do you realy want to deploy podloxx to '%s' context?", yellow(kubernetes.CurrentContextName())), 1) {
+			os.Exit(0)
+		}
+
 		kubernetes.Deploy()
 		utils.OpenBrowser(fmt.Sprintf("http://%s:%s/podloxx", os.Getenv("API_HOST"), os.Getenv("API_PORT")))
 		api.InitApi()

@@ -1,6 +1,7 @@
 package kubernetes
 
 import (
+	"fmt"
 	"path/filepath"
 	"podloxx/version"
 
@@ -74,4 +75,21 @@ func NewKubeProviderInCluster() (*KubeProvider, error) {
 	}, nil
 }
 
-func int32Ptr(i int32) *int32 { return &i }
+func CurrentContextName() string {
+	var kubeconfig string = ""
+	if home := homedir.HomeDir(); home != "" {
+		kubeconfig = filepath.Join(home, ".kube", "config")
+	}
+
+	config, err := clientcmd.NewNonInteractiveDeferredLoadingClientConfig(
+		&clientcmd.ClientConfigLoadingRules{ExplicitPath: kubeconfig},
+		&clientcmd.ConfigOverrides{
+			CurrentContext: "",
+		}).RawConfig()
+
+	if err != nil {
+		return fmt.Sprintf("Error: %v", err)
+	}
+
+	return config.CurrentContext
+}
