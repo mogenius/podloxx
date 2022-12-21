@@ -42,15 +42,19 @@ Podloxx is a leight-weight Kubernetes traffic monitoring tool that can be deploy
 # Installation
 Just download it and run it. Don't forget to set the right cluster using kubectx or whatever tool you prefer.
 
-## Mac
+## Mac (Apple Silicon)
+```
+podloxx_link=$(curl -s https://api.github.com/repos/mogenius/podloxx/releases/latest | grep browser_download_url | cut -d '"' -f 4 | grep darwin-arm64  )
+curl -s -L -o podloxx ${podloxx_link}
+chmod 755 podloxx
+./podloxx start
 ```
 
-podloxx_link=$(curl -s https://api.github.com/repos/mogenius/podloxx/releases/latest | grep browser_download_url | cut -d '"' -f 4 | grep darwin  )
-
+## Mac (Intel)
+```
+podloxx_link=$(curl -s https://api.github.com/repos/mogenius/podloxx/releases/latest | grep browser_download_url | cut -d '"' -f 4 | grep darwin-amd64  )
 curl -s -L -o podloxx ${podloxx_link}
-
 chmod 755 podloxx
-
 ./podloxx start
 ```
 
@@ -58,11 +62,8 @@ chmod 755 podloxx
 ```
 
 podloxx_link=$(curl -s https://api.github.com/repos/mogenius/podloxx/releases/latest | grep browser_download_url | cut -d '"' -f 4 | grep linux )
-
 curl -s -L -o podloxx ${podloxx_link}
-
 chmod 755 podloxx
-
 ./podloxx start
 ```
 
