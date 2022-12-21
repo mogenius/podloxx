@@ -70,9 +70,8 @@ chmod 755 podloxx
 ## Windows amd64
 ```
 
-podloxx_link=$(curl -s https://api.github.com/repos/mogenius/podloxx/releases/latest | grep browser_download_url | cut -d '"' -f 4 | grep windows-amd )
-curl.exe -s -LO -o podloxx ${podloxx_link}
-podloxx start
+curl.exe -LO "https://github.com/mogenius/podloxx/releases/download/v1.0.4/podloxx-1.0.4-windows-amd64"
+podloxx-1.0.4-windows-amd64 start
 
 ```
 
