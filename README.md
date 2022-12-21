@@ -34,7 +34,7 @@
 - [How does Podloxx work?](#how-does-podloxx-work)
 - [Configuration](#configuration)
 - [Known Issues](#known-issues)
-- [Credits](#credits)
+- [Contributors](https://github.com/mogenius/podloxx/graphs/contributors)
 
 # What is podloxx?
 Podloxx is a leight-weight Kubernetes traffic monitoring tool that can be deployed as daemonset in every cluster. Local and external traffic is monitored in real time and can be viewed through a simple web interface. This allows identification of high traffic applications, understanding container relations and optimizing Kubernetes setups. Even works with slim containers 🙃
