@@ -37,7 +37,7 @@
 - [Credits](#credits)
 
 # What is podloxx?
-Podloxx is a leight-weight Kubernetes traffic monitoring tool that can be deployed as daemonset in every cluster. Local and external traffic is monitored in real time and can be viewed through a simple web interface. This allows identification of high traffic applications, understanding container relations and optimizing Kubernetes setups. Even works with slim containers 🙃
+Podloxx is a light-weight Kubernetes traffic monitoring tool that can be deployed as daemonset in every cluster. Local and external traffic is monitored in real time and can be viewed through a simple web interface. This allows identification of high traffic applications, understanding container relations and optimizing Kubernetes setups. Even works with slim containers 🙃
 
 # Installation
 Just download it and run it. Don't forget to set the right cluster using kubectx or whatever tool you prefer.
